@@ -8,3 +8,4 @@
 Technologies Used:
 * [MarkLogic](http://developer.marklogic.com/products)
 * [Node.js](https://nodejs.org/en/)
+* [Nutritionix's API](https://developer.nutritionix.com/)
