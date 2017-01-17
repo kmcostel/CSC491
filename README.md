@@ -1,3 +1,5 @@
 ##Senior Project
 
-Initial commit
+Technologies Used:
+* [MarkLogic](http://developer.marklogic.com/products)
+* [Node.js](https://nodejs.org/en/)
