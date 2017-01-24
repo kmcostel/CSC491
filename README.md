@@ -14,6 +14,8 @@
 
 ###Run Instructions
 1. Create an appId and appKey via Nutritionix's [website](https://developer.nutritionix.com/login)
-2. Locate project directory via command line.
-3. Run 'node app.js'
-4. Go to "localhost:3000" on a web browser.
+2. Follow keys_ex.js and fill in you appId and appKey  
+3. Rename keys_ex.js to keys.js
+4. Locate project directory via command line.
+5. Run 'node app.js'
+6. Go to "localhost:3000" on a web browser.

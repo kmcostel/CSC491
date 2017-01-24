@@ -1,0 +1,2 @@
+appId = 'yourAppIdHere';
+appKey = 'yourAppKeyHere';
