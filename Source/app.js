@@ -1,43 +1,114 @@
-// Load documents into the database.
+var express = require('express');
+var keys = require('./js/keys.js');
+var http = require('http');
+var request = require('request');
+var app = express();
 
-var marklogic = require('marklogic');
-var my = require('./my-connection.js');
-var db = marklogic.createDatabaseClient(my.connInfo);
+app.use(express.static('js'));
 
-// Document descriptors to pass to write(). 
-var documents = [
-  { uri: '/gs/aardvark.json',
-    content: {
-      name: 'aardvark',
-      kind: 'mammal',
-      desc: 'The aardvark is a medium-sized burrowing, nocturnal mammal.'
-    }
-  },
-  { uri: '/gs/bluebird.json',
-    content: {
-      name: 'bluebird',
-      kind: 'bird',
-      desc: 'The bluebird is a medium-sized, mostly insectivorous bird.'
-    }
-  },
-  { uri: '/gs/cobra.json',
-    content: {
-      name: 'cobra',
-      kind: 'mammal',
-      desc: 'The cobra is a venomous, hooded snake of the family Elapidae.'
-    }
-  },
-];
+// app.get('/', function (req, res) {
+//    res.send('Hello World');
+// })
 
-// Load the example documents into the database
-db.documents.write(documents).result( 
-  function(response) {
-    console.log('Loaded the following documents:');
-    response.documents.forEach( function(document) {
-      console.log('  ' + document.uri);
-    });
-  }, 
-  function(error) {
-    console.log(JSON.stringify(error, null, 2));
+app.get('/', function (req, res) {
+  console.log(req);
+  res.sendFile( __dirname + "/" + "index.html" );
+
+});
+
+app.get('/search', function(req, res) {
+  console.log(req['query']);
+  for (var prop in req) {
+    console.log("prop = " + prop);
   }
-);
+  res.send(makePost(req['query']));
+});
+
+// app.get('/process_get', function (req, res) {
+//    // Prepare output in JSON format
+//    response = {
+//       first_name:req.query.first_name,
+//       last_name:req.query.last_name
+//    };
+//    console.log(response);
+//    res.end(JSON.stringify(response));
+// });
+
+var makePost = function(foodSearch) {
+
+  var headers = {
+    'x-app-key' : appKey,
+    'x-app-id' : appId,
+    'Content-Type':'application/json'
+  };
+
+  var body = {
+    query : foodSearch
+  };
+
+  var options = {
+    method: 'POST',
+    uri: 'https://trackapi.nutritionix.com/v2/natural/nutrients',
+    headers: headers,
+    body: body,
+    json: true
+  };
+  var str;
+
+  request(options, function(error, response, body) {
+      var str = '';
+      if (error === null) {
+        str = printBody(body);
+      }
+      else {
+        console.log('error: ' + error);
+        str = 'error: ' + error;
+      }
+    }
+  );
+  return str;
+
+};
+
+var printBody = function(body) {
+  var str = "";
+  if (body["foods"]) {
+    console.log(body["foods"].length + " food items retrieved.");
+    str += body["foods"].length + " food items retrieved."
+
+    for (var i = 0; i < body["foods"].length; i++) {
+      console.log(body["foods"][i].food_name);
+      str += body["foods"][i].food_name;
+
+      console.log("calories: " + body["foods"][i].nf_calories);
+      str += "calories: " + body["foods"][i].nf_calories;
+
+      console.log("serving weight (grams): " + body["foods"][i].serving_weight_grams);
+      str += "serving weight (grams): " + body["foods"][i].serving_weight_grams;
+
+      console.log("total carbs: " + body["foods"][i].nf_total_carbohydrate);
+      str += "total carbs: " + body["foods"][i].nf_total_carbohydrate;
+
+      console.log("total protein: " + body["foods"][i].nf_protein);
+      str +="total protein: " + body["foods"][i].nf_protein
+    }
+  }
+  else {
+    console.log("Sorry nothing found :(");
+    str = "Sorry nothing found :( ";
+  }
+  return str;
+
+}
+
+makePost('2 large grade AA eggs and 1 pound of 10% beef');
+
+var server = app.listen(3000, function () {
+   var host = server.address().address
+   var port = server.address().port
+
+   console.log("listening at port 3000");
+
+});
+
+
