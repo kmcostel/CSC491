@@ -4,17 +4,16 @@ function buttonEvent() {
 
   var queryStr = document.getElementById("myText").value;
   console.log(queryStr);
+  var data = {};
+  data.query = queryStr;
 
   $.ajax({
     type: "POST",
     url: "http://localhost:3000/query",
-    data: $("#text").value,
-    dataType: "json", //expecting json returned from the server
+    data: JSON.stringify(data),
+    contentType: "application/json",
     success: function(response) {
       console.log(response);
-    },
-    done: function(data) {
-      console.log(data);
     }
   });
 }

@@ -1,23 +1,34 @@
+require('babel-register')({
+  presets: ['react']
+});
+
 var express = require('express');
 var keys = require('./js/keys.js');
-var http = require('http');
 var request = require('request');
 var app = express();
+var bodyParser = require('body-parser');
+var React = require('react');
+var ReactDOMServer = require('react-dom/server');
+var Component = require('./Component.jsx');
+
 
 app.use(express.static('js'));
+app.use(bodyParser.json());
 
-// app.get('/', function (req, res) {
-//    res.send('Hello World');
-// })
+//app.set('views', __dirname + '/views');
+
 
 app.get('/', function (req, res) {
-  console.log(req);
-  res.sendFile( __dirname + "/" + "index.html" );
-
+  var html = ReactDOMServer.renderToString(
+    React.createElement(Component)
+  );
+  res.send(html);
+  //res.sendFile(__dirname, 'index.html');
 });
 
 app.get('/search', function(req, res) {
   console.log(req['query']);
+  console.log("INSIDE OF SEARCH!");
   for (var prop in req) {
     console.log("prop = " + prop);
   }
@@ -25,9 +36,13 @@ app.get('/search', function(req, res) {
 });
 
 app.post('/query', function(req, res) {
-  console.log("Got something here!");
 
-  res.send("Hey!");
+  console.log("Inside /query post handler: " + req.body.data);
+  console.log('body: ' + JSON.stringify(req.body));
+
+  var foodData = makePost(req.body.query)
+
+  res.send(foodData);
 })
 
 app.use(function(req, res, next){
@@ -35,7 +50,7 @@ app.use(function(req, res, next){
 
   // respond with html page
   if (req.accepts('html')) {
-    res.render('404', { url: req.url });
+    res.render('404 not founddddd!', { url: req.url });
     return;
   }
 
@@ -49,26 +64,17 @@ app.use(function(req, res, next){
   res.type('txt').send('Not found');
 });
 
-// app.get('/process_get', function (req, res) {
-//    // Prepare output in JSON format
-//    response = {
-//       first_name:req.query.first_name,
-//       last_name:req.query.last_name
-//    };
-//    console.log(response);
-//    res.end(JSON.stringify(response));
-// });
-
 var makePost = function(foodSearch) {
 
   var headers = {
     'x-app-key' : appKey,
     'x-app-id' : appId,
-    'Content-Type':'application/json'
+    'Content-Type':'application/json',
   };
 
   var body = {
     query : foodSearch
+    // fields: ["item_name","brand_name","nf_calories","nf_sodium","item_type"]
   };
 
   var options = {
@@ -78,10 +84,9 @@ var makePost = function(foodSearch) {
     body: body,
     json: true
   };
-  var str;
+  var str = '';
 
   request(options, function(error, response, body) {
-      var str = '';
       if (error === null) {
         str = printBody(body);
       }
@@ -116,24 +121,24 @@ var printBody = function(body) {
 
       console.log("total protein: " + body["foods"][i].nf_protein);
       str +="total protein: " + body["foods"][i].nf_protein
+
+      console.log("total fat: " + body["foods"][i].nf_total_fat);
+      str +="total fat: " + body["foods"][i].nf_total_fat;
     }
   }
   else {
-    console.log("Sorry nothing found :(");
-    str = "Sorry nothing found :( ";
+    console.log("Sorry nothing found :("); // logs to terminal
+    str = "Sorry nothing found :("; // returns to client ajax call
   }
   return str;
 
 }
 
-makePost('2 large grade AA eggs and 1 pound of 10% beef');
+makePost('100 grams gala apple');
 
-var server = app.listen(3000, function () {
-   var host = server.address().address
-   var port = server.address().port
-
-   console.log("listening at port 3000");
-
+var PORT = 3000;
+app.listen(PORT, function() {
+  console.log('listening to localhost:' + PORT);
 });
 
 
