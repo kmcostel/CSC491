@@ -3,68 +3,12 @@ require('babel-register')({
 });
 
 var express = require('express');
-var keys = require('./js/keys.js');
+var keys = require('./public/js/keys.js');
 var request = require('request');
 var app = express();
 var bodyParser = require('body-parser');
-var React = require('react');
-var ReactDOMServer = require('react-dom/server');
-var Component = require('./Component.jsx');
 
-
-app.use(express.static('js'));
-app.use(bodyParser.json());
-
-//app.set('views', __dirname + '/views');
-
-
-app.get('/', function (req, res) {
-  var html = ReactDOMServer.renderToString(
-    React.createElement(Component)
-  );
-  res.send(html);
-  //res.sendFile(__dirname, 'index.html');
-});
-
-app.get('/search', function(req, res) {
-  console.log(req['query']);
-  console.log("INSIDE OF SEARCH!");
-  for (var prop in req) {
-    console.log("prop = " + prop);
-  }
-  res.send(makePost(req['query']));
-});
-
-app.post('/query', function(req, res) {
-
-  console.log("Inside /query post handler: " + req.body.data);
-  console.log('body: ' + JSON.stringify(req.body));
-
-  var foodData = makePost(req.body.query)
-
-  res.send(foodData);
-})
-
-app.use(function(req, res, next){
-  res.status(404);
-
-  // respond with html page
-  if (req.accepts('html')) {
-    res.render('404 not founddddd!', { url: req.url });
-    return;
-  }
-
-  // respond with json
-  if (req.accepts('json')) {
-    res.send({ error: 'Not found' });
-    return;
-  }
-
-  // default to plain-text. send()
-  res.type('txt').send('Not found');
-});
-
-var makePost = function(foodSearch) {
+var makePost = function(foodSearch, appKey, appId) {
 
   var headers = {
     'x-app-key' : appKey,
@@ -84,6 +28,7 @@ var makePost = function(foodSearch) {
     body: body,
     json: true
   };
+
   var str = '';
 
   request(options, function(error, response, body) {
@@ -97,7 +42,6 @@ var makePost = function(foodSearch) {
     }
   );
   return str;
-
 };
 
 var printBody = function(body) {
@@ -134,11 +78,19 @@ var printBody = function(body) {
 
 }
 
-makePost('100 grams gala apple');
+makePost('1 cup of white rice', appKey, appId);
+
+//serve all files in public directory
+app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(require('./routes/index.jsx'))
+
+//app.set('views', __dirname + '/views');
 
 var PORT = 3000;
+
 app.listen(PORT, function() {
   console.log('listening to localhost:' + PORT);
 });
 
-
+makePost('50 grams of pineapple and 1 cup white short grain rice', appKey, appId);

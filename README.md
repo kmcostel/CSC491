@@ -1,16 +1,9 @@
 ##Senior Project
 
 ###Setup steps
-1. Download and install MarkLogic and NodeJS
-2. Download jQuery 3.1.1
-3. Start MarkLogic
-4. Run 'npm install marklogic' in Source folder
-
-###Technologies Used
-* [MarkLogic](http://developer.marklogic.com/products)
-* [Node.js](https://nodejs.org/en/)
-* [Nutritionix's API](https://developer.nutritionix.com/)
-* [jQuery](https://jquery.com/download/)
+1. Run 'git clone git@github.com:kmcostel/CSC491.git'
+2. Run 'npm install' in root directory of project
+3. Run 'node app.js'
 
 ###Run Instructions
 1. Create an appId and appKey with Nutritionix's developer API [website](https://developer.nutritionix.com/login).
