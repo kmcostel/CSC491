@@ -78,10 +78,11 @@ var printBody = function(body) {
 
 }
 
-makePost('1 cup of white rice', appKey, appId);
+//makePost('1 cup of white rice', appKey, appId);
 
 //serve all files in public directory
 app.use(express.static('public'));
+
 app.use(bodyParser.json());
 app.use(require('./routes/index.jsx'))
 
@@ -93,4 +94,4 @@ app.listen(PORT, function() {
   console.log('listening to localhost:' + PORT);
 });
 
-makePost('50 grams of pineapple and 1 cup white short grain rice', appKey, appId);
+//makePost('50 grams of pineapple and 1 cup white short grain rice', appKey, appId);

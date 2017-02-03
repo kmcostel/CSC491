@@ -23,7 +23,7 @@ router.get('*', function (req, res) {
         );
         res.send(html);
       } else {
-        res.status(404).send('Not Found!');
+        res.status(404).send('404 - Not Found!');
       }
   });
 });

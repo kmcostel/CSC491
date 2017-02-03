@@ -5,3 +5,7 @@ var Component = require('./Component.jsx');
 ReactDOM.render(
   React.createElement(Component), document
 );
+
+// ReactDOM.render(
+//   React.createElement(Component), document
+// );

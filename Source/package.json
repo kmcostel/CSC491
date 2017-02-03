@@ -12,6 +12,7 @@
     "express": "^4.14.0",
     "express-react-views": "^0.10.2",
     "marklogic": "^1.0.6",
+    "nodemon": "^1.11.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-router": "^3.0.2",

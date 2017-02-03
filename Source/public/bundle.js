@@ -52,6 +52,10 @@
 	  React.createElement(Component), document
 	);
 
+	// ReactDOM.render(
+	//   React.createElement(Component), document
+	// );
+
 
 /***/ },
 /* 1 */
@@ -21494,48 +21498,68 @@
 	var React = __webpack_require__(1);
 
 	module.exports = React.createClass({
-	   displayName: 'exports',
+	   displayName: "exports",
 
 	   _handleClick: function () {
-	      alert();
+	      alert("You clicked me");
+	   },
+	   handleChange: function () {
+	      console.log("Change");
+	   },
+	   makePost: function () {
+	      console.log("Makepost1");
+	      var enteredText = document.getElementById("searchText").value;
+	      console.log(enteredText);
 	   },
 	   render: function () {
 	      return React.createElement(
-	         'html',
+	         "html",
 	         null,
 	         React.createElement(
-	            'head',
+	            "head",
 	            null,
 	            React.createElement(
-	               'title',
+	               "title",
 	               null,
-	               'Universal App with React'
+	               "Carbs"
 	            ),
-	            React.createElement('link', { rel: 'stylesheet', href: '/style.css' })
+	            React.createElement("link", { rel: "stylesheet", href: "/style.css" })
 	         ),
 	         React.createElement(
-	            'body',
+	            "body",
 	            null,
 	            React.createElement(
-	               'div',
+	               "div",
 	               null,
 	               React.createElement(
-	                  'h1',
+	                  "h1",
 	                  null,
-	                  'Hello World!'
+	                  "Carb Counter"
 	               ),
 	               React.createElement(
-	                  'p',
+	                  "p",
 	                  null,
-	                  'Isn\'t server-side rendering remarkable?'
+	                  "Discover how many carbs are in your meal!"
 	               ),
 	               React.createElement(
-	                  'button',
+	                  "button",
 	                  { onClick: this._handleClick },
-	                  ' Click me!'
+	                  " Click me!"
 	               )
 	            ),
-	            React.createElement('script', { src: '/bundle.js' })
+	            React.createElement("br", null),
+	            React.createElement(
+	               "div",
+	               null,
+	               React.createElement("textarea", { id: "searchText", cols: "80", rows: "1" }),
+	               " \xA0",
+	               React.createElement(
+	                  "button",
+	                  { id: "myButton", onClick: this.makePost },
+	                  " Search "
+	               )
+	            ),
+	            React.createElement("script", { src: "/bundle.js" })
 	         )
 	      );
 	   }
