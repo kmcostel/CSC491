@@ -9,12 +9,14 @@ var ReactRouter = require('react-router')
 
 router.get('*', function (req, res) {
   var props = {title: 'Universal React'};
-  console.log("Got a request!");
   ReactRouter.match({
     routes: (
-      <ReactRouter.Router>
-        <ReactRouter.Route path='/' component={require('../Index.jsx')}> </ReactRouter.Route>
-        <ReactRouter.Route path='/login' component={require('../Login.jsx')}> </ReactRouter.Route>
+      <ReactRouter.Router history={ReactRouter.browserHistory}>
+        <ReactRouter.Route path='/' component={require('../Index.jsx')}>
+        </ReactRouter.Route>
+
+        <ReactRouter.Route path='/login.html' component={require('../Login.jsx')}>
+        </ReactRouter.Route>
       </ReactRouter.Router>
     ),
     location: req.url

@@ -1,9 +1,6 @@
 var React = require('react');
 
 module.exports = React.createClass({
-   _handleClick: function() {
-      alert("You clicked me");
-   },
    handleChange: function() {
       console.log("Change");
    },
@@ -20,12 +17,17 @@ module.exports = React.createClass({
                <link rel='stylesheet' href='/style.css' />
             </head>
             <body>
+               <div id="topcorner">
+                 <a href="/login">Login</a>
+                 &nbsp; &nbsp;
+                 <a href="">Register</a>
+              </div>
+
                <div>
                   <h1>Carb Counter</h1>
-                  <p>Discover how many carbs are in your meal!</p>
-                  <button onClick={this._handleClick}> Click me!</button>
+                  <p>What are you eating?</p>
                </div>
-               <br />
+
                <div>
                   <textarea id="searchText" cols="80" rows="1"/> &nbsp;
                   <button id="myButton" onClick={this.makePost}> Search </button>

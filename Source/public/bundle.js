@@ -21500,9 +21500,6 @@
 	module.exports = React.createClass({
 	   displayName: "exports",
 
-	   _handleClick: function () {
-	      alert("You clicked me");
-	   },
 	   handleChange: function () {
 	      console.log("Change");
 	   },
@@ -21530,6 +21527,21 @@
 	            null,
 	            React.createElement(
 	               "div",
+	               { id: "topcorner" },
+	               React.createElement(
+	                  "a",
+	                  { href: "/login" },
+	                  "Login"
+	               ),
+	               "\xA0 \xA0",
+	               React.createElement(
+	                  "a",
+	                  { href: "" },
+	                  "Register"
+	               )
+	            ),
+	            React.createElement(
+	               "div",
 	               null,
 	               React.createElement(
 	                  "h1",
@@ -21539,15 +21551,9 @@
 	               React.createElement(
 	                  "p",
 	                  null,
-	                  "Discover how many carbs are in your meal!"
-	               ),
-	               React.createElement(
-	                  "button",
-	                  { onClick: this._handleClick },
-	                  " Click me!"
+	                  "What are you eating?"
 	               )
 	            ),
-	            React.createElement("br", null),
 	            React.createElement(
 	               "div",
 	               null,
