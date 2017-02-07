@@ -13,7 +13,7 @@ module.exports = React.createClass({
             </head>
             <body>
                <div id="topcorner">
-                 <a href="">Login</a>
+                 <a href="/">Home</a>
                  &nbsp; &nbsp;
                  <a href="">Register</a>
               </div>
