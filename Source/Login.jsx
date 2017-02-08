@@ -14,12 +14,9 @@ module.exports = React.createClass({
             <body>
                <div id="topcorner">
                  <a href="/">Home</a>
-                 &nbsp; &nbsp;
-                 <a href="">Register</a>
               </div>
               <p> Login page </p>
-               <script src='/bundle.js' />
-
+              <script src='/bundle.js' />
             </body>
          </html>
       );

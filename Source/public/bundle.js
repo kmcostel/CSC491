@@ -46,15 +46,17 @@
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(32);
-	var Component = __webpack_require__(178);
+	var HomeComp = __webpack_require__(178);
+	var LoginComp = __webpack_require__(179);
+
+	var homeComp = React.createElement(HomeComp);
+	var loginComp = React.createElement(LoginComp);
 
 	ReactDOM.render(
-	  React.createElement(Component), document
+	  homeComp, document
 	);
 
-	// ReactDOM.render(
-	//   React.createElement(Component), document
-	// );
+
 
 
 /***/ },
@@ -21498,74 +21500,134 @@
 	var React = __webpack_require__(1);
 
 	module.exports = React.createClass({
-	   displayName: "exports",
+	   displayName: 'exports',
 
 	   handleChange: function () {
 	      console.log("Change");
 	   },
 	   makePost: function () {
-	      console.log("Makepost1");
-	      var enteredText = document.getElementById("searchText").value;
-	      console.log(enteredText);
+	      var enteredStr = document.getElementById('searchText').value;
+	      var data = { 'search': enteredStr };
+
+	      console.log('Posting');
+	      var success = function () {
+	         console.log("Post success");
+	      };
+	      var url = 'http://localhost:3000/nutri';
+
+	      $.ajax({
+	         url: url,
+	         type: "POST",
+	         data: data,
+	         contentType: "application/json; charset=utf-8",
+	         dataType: "json",
+	         success: function (response) {
+	            console.log(response);
+	         }
+	      });
 	   },
 	   render: function () {
 	      return React.createElement(
-	         "html",
+	         'html',
 	         null,
 	         React.createElement(
-	            "head",
+	            'head',
 	            null,
 	            React.createElement(
-	               "title",
+	               'title',
 	               null,
-	               "Carbs"
+	               'Carbs'
 	            ),
-	            React.createElement("link", { rel: "stylesheet", href: "/style.css" })
+	            React.createElement('link', { rel: 'stylesheet', href: '/style.css' }),
+	            React.createElement('script', { src: 'https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js' })
 	         ),
 	         React.createElement(
-	            "body",
+	            'body',
 	            null,
 	            React.createElement(
-	               "div",
-	               { id: "topcorner" },
+	               'div',
+	               { id: 'topcorner' },
 	               React.createElement(
-	                  "a",
-	                  { href: "/login" },
-	                  "Login"
-	               ),
-	               "\xA0 \xA0",
-	               React.createElement(
-	                  "a",
-	                  { href: "" },
-	                  "Register"
+	                  'a',
+	                  { href: '/login' },
+	                  'Login'
 	               )
 	            ),
 	            React.createElement(
-	               "div",
+	               'div',
 	               null,
 	               React.createElement(
-	                  "h1",
+	                  'h1',
 	                  null,
-	                  "Carb Counter"
+	                  'Carb Counter'
 	               ),
 	               React.createElement(
-	                  "p",
+	                  'p',
 	                  null,
-	                  "What are you eating?"
+	                  'What are you eating?'
 	               )
 	            ),
 	            React.createElement(
-	               "div",
+	               'div',
 	               null,
-	               React.createElement("textarea", { id: "searchText", cols: "80", rows: "1" }),
-	               " \xA0",
+	               React.createElement('textarea', { id: 'searchText', cols: '80', rows: '1' }),
+	               ' \xA0',
 	               React.createElement(
-	                  "button",
-	                  { id: "myButton", onClick: this.makePost },
-	                  " Search "
+	                  'button',
+	                  { id: 'myButton', onClick: this.makePost },
+	                  ' Search '
 	               )
 	            ),
-	            React.createElement("script", { src: "/bundle.js" })
+	            React.createElement('script', { src: '/bundle.js' })
+	         )
+	      );
+	   }
+	});
+
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	module.exports = React.createClass({
+	   displayName: 'exports',
+
+	   handleChange: function () {
+	      console.log("Change");
+	   },
+	   render: function () {
+	      return React.createElement(
+	         'html',
+	         null,
+	         React.createElement(
+	            'head',
+	            null,
+	            React.createElement(
+	               'title',
+	               null,
+	               'Carbs'
+	            ),
+	            React.createElement('link', { rel: 'stylesheet', href: '/style.css' })
+	         ),
+	         React.createElement(
+	            'body',
+	            null,
+	            React.createElement(
+	               'div',
+	               { id: 'topcorner' },
+	               React.createElement(
+	                  'a',
+	                  { href: '/' },
+	                  'Home'
+	               )
+	            ),
+	            React.createElement(
+	               'p',
+	               null,
+	               ' Login page '
+	            ),
+	            React.createElement('script', { src: '/bundle.js' })
 	         )
 	      );
 	   }

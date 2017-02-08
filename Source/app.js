@@ -84,7 +84,8 @@ var printBody = function(body) {
 app.use(express.static('public'));
 
 app.use(bodyParser.json());
-app.use(require('./routes/index.jsx'))
+app.use(require('./routes/index.jsx'));
+//app.use(require('./routes/login.jsx'));
 
 //app.set('views', __dirname + '/views');
 

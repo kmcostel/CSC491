@@ -7,7 +7,7 @@ var homeComp = React.createElement(HomeComp);
 var loginComp = React.createElement(LoginComp);
 
 ReactDOM.render(
-  homeComp, document
+  loginComp, document
 );
 
 
