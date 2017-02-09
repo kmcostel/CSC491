@@ -9,5 +9,3 @@ var loginComp = React.createElement(LoginComp);
 ReactDOM.render(
   homeComp, document
 );
-
-

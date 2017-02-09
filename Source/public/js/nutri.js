@@ -6,7 +6,7 @@ define(['nutri'], function (nutri) {
     var headers = {
       'x-app-key' : appKey,
       'x-app-id' : appId,
-      'Content-Type':'application/json',
+      'Content-Type':'application/json'
     };
 
     var body = {
