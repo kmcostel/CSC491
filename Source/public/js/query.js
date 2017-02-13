@@ -20,4 +20,3 @@ db.documents.query(
 }, function(error) {
     console.log(JSON.stringify(error, null, 2));
 });
-

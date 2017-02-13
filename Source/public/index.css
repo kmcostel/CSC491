@@ -1,3 +1,6 @@
+.active {
+  color: green;
+}
 body {
   padding: 60px;
   font: 25px "Lucida Grande", Helvetica, Arial;
@@ -7,6 +10,27 @@ textarea {
   padding: 10px;
   resize: none;
   horizontal-align: center;
+}
+
+a:link{
+  color:none;
+}
+a:visited{
+  color:none;
+}
+a:hover{
+  color:none;
+}
+a:focus{
+  color:none;
+}
+a:active{
+  color:none;
+}
+
+
+a {
+  text-decoration: none;
 }
 
 #topcorner{
@@ -40,3 +64,4 @@ button:active {
   position:relative;
   top:1px;
 }
+
