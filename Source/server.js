@@ -5,6 +5,8 @@ import { renderToString } from 'react-dom/server'
 import { match, RouterContext } from 'react-router'
 import routes from './modules/routes'
 
+var nutri = require('./public/js/nutri.js');
+console.log(nutri);
 var express = require('express')
 var path = require('path')
 var compression = require('compression')

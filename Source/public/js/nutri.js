@@ -1,4 +1,6 @@
-var makePost = function(foodSearch, appKey, appId) {
+module.exports = {
+
+  makePost: function(foodSearch, appKey, appId) {
   var headers = {
     'x-app-key' : appKey,
     'x-app-id' : appId,
@@ -9,7 +11,7 @@ var makePost = function(foodSearch, appKey, appId) {
     query : foodSearch
     // fields: ["item_name","brand_name","nf_calories","nf_sodium","item_type"]
   };
-
+  
   var options = {
     method: 'POST',
     uri: 'https://trackapi.nutritionix.com/v2/natural/nutrients',
@@ -31,9 +33,9 @@ var makePost = function(foodSearch, appKey, appId) {
     }
   );
   return str;
-};
+  },
 
-var printBody = function(body) {
+  printBody: function(body) {
   var str = "";
   if (body["foods"]) {
     console.log(body["foods"].length + " food items retrieved.");
@@ -64,5 +66,5 @@ var printBody = function(body) {
     str = "Sorry nothing found :("; // returns to client ajax call
   }
   return str;
-
+  }
 }

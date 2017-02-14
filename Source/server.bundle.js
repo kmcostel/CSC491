@@ -61,13 +61,15 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Use these to match the url to routes and then render
-	var express = __webpack_require__(13);
-	var path = __webpack_require__(14);
-	var compression = __webpack_require__(15);
+	var nutri = __webpack_require__(13);
+	console.log(nutri);
+	var express = __webpack_require__(14);
+	var path = __webpack_require__(15);
+	var compression = __webpack_require__(16);
 	var app = express();
 
 	app.use(compression());
-	var bodyParser = __webpack_require__(16);
+	var bodyParser = __webpack_require__(17);
 	app.use(bodyParser.json());
 
 	// serve our static stuff like index.css
@@ -567,22 +569,96 @@
 /* 13 */
 /***/ function(module, exports) {
 
-	module.exports = require("express");
+	'use strict';
+
+	module.exports = {
+
+	  makePost: function makePost(foodSearch, appKey, appId) {
+	    var headers = {
+	      'x-app-key': appKey,
+	      'x-app-id': appId,
+	      'Content-Type': 'application/json'
+	    };
+
+	    var body = {
+	      query: foodSearch
+	      // fields: ["item_name","brand_name","nf_calories","nf_sodium","item_type"]
+	    };
+
+	    var options = {
+	      method: 'POST',
+	      uri: 'https://trackapi.nutritionix.com/v2/natural/nutrients',
+	      headers: headers,
+	      body: body,
+	      json: true
+	    };
+
+	    var str = '';
+
+	    request(options, function (error, response, body) {
+	      if (error === null) {
+	        str = printBody(body);
+	      } else {
+	        console.log('error: ' + error);
+	        str = 'error: ' + error;
+	      }
+	    });
+	    return str;
+	  },
+
+	  printBody: function printBody(body) {
+	    var str = "";
+	    if (body["foods"]) {
+	      console.log(body["foods"].length + " food items retrieved.");
+	      str += body["foods"].length + " food items retrieved.";
+
+	      for (var i = 0; i < body["foods"].length; i++) {
+	        console.log(body["foods"][i].food_name);
+	        str += body["foods"][i].food_name;
+
+	        console.log("calories: " + body["foods"][i].nf_calories);
+	        str += "calories: " + body["foods"][i].nf_calories;
+
+	        console.log("serving weight (grams): " + body["foods"][i].serving_weight_grams);
+	        str += "serving weight (grams): " + body["foods"][i].serving_weight_grams;
+
+	        console.log("total carbs: " + body["foods"][i].nf_total_carbohydrate);
+	        str += "total carbs: " + body["foods"][i].nf_total_carbohydrate;
+
+	        console.log("total protein: " + body["foods"][i].nf_protein);
+	        str += "total protein: " + body["foods"][i].nf_protein;
+
+	        console.log("total fat: " + body["foods"][i].nf_total_fat);
+	        str += "total fat: " + body["foods"][i].nf_total_fat;
+	      }
+	    } else {
+	      console.log("Sorry nothing found :("); // logs to terminal
+	      str = "Sorry nothing found :("; // returns to client ajax call
+	    }
+	    return str;
+	  }
+	};
 
 /***/ },
 /* 14 */
 /***/ function(module, exports) {
 
-	module.exports = require("path");
+	module.exports = require("express");
 
 /***/ },
 /* 15 */
 /***/ function(module, exports) {
 
-	module.exports = require("compression");
+	module.exports = require("path");
 
 /***/ },
 /* 16 */
+/***/ function(module, exports) {
+
+	module.exports = require("compression");
+
+/***/ },
+/* 17 */
 /***/ function(module, exports) {
 
 	module.exports = require("body-parser");
