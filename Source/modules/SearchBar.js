@@ -7,16 +7,16 @@ export default React.createClass({
 
       console.log('Posting with: ' + enteredStr);
       var success = function() {
-        console.log("Post success");
+        console.log('Post success');
       }
       var url = 'http://localhost:8080/nutri';
 
       $.ajax({
         url: url,
-        type: "POST",
-        data: data,
+        type: 'POST',
+        data: JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
-        dataType: "json",
+        dataType: 'json',
         success: function(response){
           console.log(response);
         }

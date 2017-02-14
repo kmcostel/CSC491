@@ -7,9 +7,10 @@ import routes from './modules/routes'
 
 var express = require('express')
 var path = require('path')
-
+var compression = require('compression')
 var app = express()
 
+app.use(compression());
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
@@ -21,12 +22,13 @@ app.use('/nutri', function (req, res, next) {
 })
 
 
-app.post('nutri', (req, res) => {
-  res.send('Got a post from \'nutri\'!')
+app.post('*', (req, res) => {
+  console.log(req.body);
+  res.send('Got a post!')
 })
 
 // send all requests to index.html so browserHistory works
-/*app.get('*', (req, res) => {
+app.get('*', (req, res) => {
   console.log("Getting");
   // match the routes to the url
   match({ routes: routes, location: req.url }, (err, redirect, props) => {
@@ -41,7 +43,7 @@ app.post('nutri', (req, res) => {
     // function, `renderPage`
     res.send(renderPage(appHtml))
   })
-})*/
+})
 
 function renderPage(appHtml) {
   return `
