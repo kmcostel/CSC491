@@ -1,8 +1,7 @@
-// import some new stuff
 import React from 'react'
-// we'll use this to render our app to an html string
 import { renderToString } from 'react-dom/server'
-// and these to match the url to routes and then render
+
+// Use these to match the url to routes and then render
 import { match, RouterContext } from 'react-router'
 import routes from './modules/routes'
 
@@ -13,11 +12,21 @@ var app = express()
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
+
 // serve our static stuff like index.css
 app.use(express.static(path.join(__dirname, 'public')))
+app.use('/nutri', function (req, res, next) {
+  console.log("NExt");
+  next();
+})
+
+
+app.post('nutri', (req, res) => {
+  res.send('Got a post from \'nutri\'!')
+})
 
 // send all requests to index.html so browserHistory works
-app.get('*', (req, res) => {
+/*app.get('*', (req, res) => {
   console.log("Getting");
   // match the routes to the url
   match({ routes: routes, location: req.url }, (err, redirect, props) => {
@@ -32,12 +41,7 @@ app.get('*', (req, res) => {
     // function, `renderPage`
     res.send(renderPage(appHtml))
   })
-})
-
-app.post('*', (req, res) => {
-  res.send('Got a post from \'nutri\'!')
-})
-
+})*/
 
 function renderPage(appHtml) {
   return `

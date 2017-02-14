@@ -27,7 +27,7 @@ export default React.createClass({
          <div>
            <p> What did you eat? </p>
            <textarea id='searchText' placeholder='1 large egg and 50 grams of raw spinach' cols='80' rows='1'/> &nbsp;
-           <button id='myButton' onClick={this.makePost}> Search </button>
+           <button className='greenOut' onClick={this.makePost}> Search </button>
          </div>
       )
    }

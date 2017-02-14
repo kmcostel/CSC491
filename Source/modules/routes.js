@@ -14,6 +14,7 @@ module.exports = (
       <Route path="/repos/:userName/:repoName" component={Repo}/>
     </Route>
     <Route path="/login" component={Login}/>
+    <Route path="/nutri" component={Login}/>
   </Route>
 )
 

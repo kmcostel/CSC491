@@ -12,56 +12,38 @@ textarea {
   horizontal-align: center;
 }
 
-a:link{
-  color:none;
-}
-a:visited{
-  color:none;
-}
-a:hover{
-  color:none;
-}
-a:focus{
-  color:none;
-}
-a:active{
-  color:none;
-}
-
-
 a {
   text-decoration: none;
+  color: green;
 }
 
 #topcorner{
   position:absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   font-size: 18px;
 }
 
-button {
-  background-color:#00d640;
-  -moz-border-radius:22px;
-  -webkit-border-radius:22px;
-  border-radius:22px;
-  border:3px solid #43ba4f;
+.greenOut {
+  background-color:transparent;
+  border:3px solid #3ae64b;
   display:inline-block;
   cursor:pointer;
-  color:#ffffff;
+  color:#000000;
   font-family:Verdana;
   font-size:17px;
-  padding:13px 23px;
+  padding:10px 23px;
   text-decoration:none;
-  text-shadow:0px 0px 2px #2f6627;
 }
-
-button:hover {
-  background-color:#5cbf2a;
+.greenOut:hover {
+  background-color:transparent;
 }
-
-button:active {
+.greenOut:focus{
+  outline: 0;
+}
+.greenOut:active {
   position:relative;
-  top:1px;
 }
+
+
 

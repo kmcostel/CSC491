@@ -1,4 +1,5 @@
 import React from 'react'
+import LoginForm from './LoginForm'
 
 module.exports = React.createClass({
    validateUser: function(username, password) {
@@ -11,8 +12,7 @@ module.exports = React.createClass({
            <div id="topcorner">
              <a href="/">Home</a>
            </div>
-           <div id="loginForm">
-           </div>
+           <LoginForm />
          </div>
       );
    }
