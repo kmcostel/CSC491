@@ -24,10 +24,10 @@ export default React.createClass({
    },
    render: function() {
       return (
-         <div>
+         <div id='searchDiv'>
            <p> What did you eat? </p>
            <textarea id='searchText' placeholder='1 large egg and 50 grams of raw spinach' cols='80' rows='1'/> &nbsp;
-           <button className='greenOut' onClick={this.makePost}> Search </button>
+           <button id='searchBtn' className='greenOut' onClick={this.makePost}> Search </button>
          </div>
       )
    }

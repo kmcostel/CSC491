@@ -1,20 +1,20 @@
-.active {
-  color: green;
-}
 body {
   padding: 60px;
   font: 25px "Lucida Grande", Helvetica, Arial;
 }
+
 textarea {
   font-size: 20px;
   padding: 10px;
   resize: none;
   horizontal-align: center;
+  background-color: #e2e2e2;
+  color: #3ae64b;
 }
 
 a {
   text-decoration: none;
-  color: green;
+  color: #3ae64b;
 }
 
 #topcorner{
@@ -24,8 +24,16 @@ a {
   font-size: 18px;
 }
 
+#searchBtn {
+  position: absolute;
+}
+
+#searchDiv {
+  display: inline-block;
+  position: relative;
+}
+
 .greenOut {
-  background-color:transparent;
   border:3px solid #3ae64b;
   display:inline-block;
   cursor:pointer;

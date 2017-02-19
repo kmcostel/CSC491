@@ -1,63 +1,43 @@
-import React from 'react'
-import { renderToString } from 'react-dom/server'
+import React from 'react';
+import { renderToString } from 'react-dom/server';
 
 // Use these to match the url to routes and then render
 import { match, RouterContext } from 'react-router'
-import routes from './modules/routes'
+import routes from './modules/routes';
 
 var nutri = require('./public/js/nutri.js');
 console.log(nutri);
-var express = require('express')
+var express = require('express');
+var path = require('path');
+var keys = require('./public/js/keys.js');
+var compression = require('compression');
 var path = require('path')
-var compression = require('compression')
+var favicon = require('serve-favicon');
 var app = express()
 
+// Compression
 app.use(compression());
+
+// Parser for POST requests to server
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
-// serve our static stuff like index.css
-app.use(express.static(path.join(__dirname, 'public')))
-app.use('/nutri', function (req, res, next) {
-  console.log("NExt");
-  next();
-})
+// Serve static stuff like index.css
+app.use(express.static('public'))
+// app.use(express.static(__dirname + '/public/images'))
 
+// Favicon
+app.use(favicon('public/images/favicon.ico'));
 
-app.post('*', (req, res) => {
+app.post('/nutri', (req, res) => {
   console.log(req.body);
-  res.send('Got a post!')
+  var searchResult = nutri.makePost(req.body.search, keys.key.appKey, keys.key.appId);
+  res.send(searchResult);
 })
 
-// send all requests to index.html so browserHistory works
 app.get('*', (req, res) => {
-  console.log("Getting");
-  // match the routes to the url
-  match({ routes: routes, location: req.url }, (err, redirect, props) => {
-    // `RouterContext` is what the `Router` renders. `Router` keeps these
-    // `props` in its state as it listens to `browserHistory`. But on the
-    // server our app is stateless, so we need to use `match` to
-    // get these props before rendering.
-    const appHtml = renderToString(<RouterContext {...props}/>)
-
-    // dump the HTML into a template, lots of ways to do this, but none are
-    // really influenced by React Router, so we're just using a little
-    // function, `renderPage`
-    res.send(renderPage(appHtml))
-  })
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
-
-function renderPage(appHtml) {
-  return `
-    <!doctype html public="storage">
-    <html>
-    <meta charset=utf-8/>
-    <title>My First React Router App</title>
-    <link rel=stylesheet href=/index.css>
-    <div id=app>${appHtml}</div>
-    <script src="/bundle.js"></script>
-   `
-}
 
 var PORT = process.env.PORT || 8080
 app.listen(PORT, function() {
