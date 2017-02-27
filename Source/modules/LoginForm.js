@@ -5,12 +5,13 @@ export default React.createClass({
     console.log('username = ' + usrnm);
     console.log('password = ' + psw);
   },
+  loadFb: function() {
+
+  },
   render() {
     return ( 
       <div>
-        <textarea> </textarea>
-	<textarea> </textarea>
-        <button className='greenOut'> Login Button </button>
+         <button className='greenOut'> Login Button </button>
       </div>
     )
   }

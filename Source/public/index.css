@@ -9,7 +9,7 @@ textarea {
   resize: none;
   horizontal-align: center;
   background-color: #e2e2e2;
-  color: #3ae64b;
+  color: black;
 }
 
 a {
@@ -18,7 +18,7 @@ a {
 }
 
 #topcorner{
-  position:absolute;
+  position: absolute;
   top: 12px;
   right: 12px;
   font-size: 18px;
@@ -34,23 +34,23 @@ a {
 }
 
 .greenOut {
-  border:3px solid #3ae64b;
-  display:inline-block;
-  cursor:pointer;
-  color:#000000;
-  font-family:Verdana;
-  font-size:17px;
-  padding:10px 23px;
-  text-decoration:none;
+  border: 3px solid #3ae64b;
+  display: inline-block;
+  cursor: pointer;
+  color: #000000;
+  font-family: Verdana;
+  font-size: 17px;
+  padding: 10px 23px;
+  text-decoration: none;
 }
 .greenOut:hover {
-  background-color:transparent;
+  background-color: #e2e2e2;
 }
 .greenOut:focus{
   outline: 0;
 }
 .greenOut:active {
-  position:relative;
+  position: relative;
 }
 
 

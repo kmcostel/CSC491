@@ -25727,7 +25727,7 @@
 	      _react2.default.createElement(
 	        'p',
 	        null,
-	        ' What did you eat? '
+	        ' What are you eating? '
 	      ),
 	      _react2.default.createElement('textarea', { id: 'searchText', placeholder: '1 large egg and 50 grams of raw spinach', cols: '80', rows: '1' }),
 	      ' \xA0',
@@ -25808,20 +25808,11 @@
 	    console.log('username = ' + usrnm);
 	    console.log('password = ' + psw);
 	  },
+	  loadFb: function loadFb() {},
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      _react2.default.createElement(
-	        'textarea',
-	        null,
-	        ' '
-	      ),
-	      _react2.default.createElement(
-	        'textarea',
-	        null,
-	        ' '
-	      ),
 	      _react2.default.createElement(
 	        'button',
 	        { className: 'greenOut' },
