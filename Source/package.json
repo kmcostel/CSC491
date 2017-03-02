@@ -9,7 +9,8 @@
     "start:dev": "webpack-dev-server --inline --content-base public/ --history-api-fallback",
     "build:server": "webpack --config webpack.server.config.js",
     "build:client": "webpack",
-    "build": "npm run build:client && npm run build:server"
+    "build": "webpack && webpack --config webpack.server.config.js",
+    "buildOG": "npm run build:client && npm run build:server"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "express": "^4.14.1",
     "if-env": "^1.0.0",
     "path": "^0.12.7",
+    "pem": "^1.9.4",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
     "react-router": "^2.8.1",

@@ -61,44 +61,54 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Use these to match the url to routes and then render
-	var nutri = __webpack_require__(13);
-	console.log(nutri);
-	var express = __webpack_require__(15);
-	var path = __webpack_require__(16);
-	var keys = __webpack_require__(17);
-	var compression = __webpack_require__(18);
-	var path = __webpack_require__(16);
-	var favicon = __webpack_require__(19);
+	var bodyParser = __webpack_require__(9);
+	var compression = __webpack_require__(10);
+	var express = __webpack_require__(11);
+	var favicon = __webpack_require__(12);
+	var https = __webpack_require__(13);
+	var keys = __webpack_require__(14);
+	var nutri = __webpack_require__(15);
+	var path = __webpack_require__(17);
+	var pem = __webpack_require__(18);
+
 	var app = express();
 
 	// Compression
 	app.use(compression());
 
 	// Parser for POST requests to server
-	var bodyParser = __webpack_require__(20);
 	app.use(bodyParser.json());
 
-	// Serve static stuff like index.css
+	// Serve static stuff like index.css from directory 'public'
 	app.use(express.static('public'));
 	// app.use(express.static(__dirname + '/public/images'))
 
 	// Favicon
-	app.use(favicon('public/images/favicon.ico'));
+	app.use(favicon('public/images/donut.ico'));
 
 	app.post('/nutri', function (req, res) {
+	  // testing purposes
 	  console.log(req.body);
+
 	  var searchResult = nutri.makePost(req.body.search, keys.key.appKey, keys.key.appId);
 	  res.send(searchResult);
 	});
 
 	app.get('*', function (req, res) {
+	  //res.sendFile(path.resolve(__dirname, 'exampleFB.html'))
 	  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 	});
 
 	var PORT = process.env.PORT || 8080;
-	app.listen(PORT, function () {
-	  console.log('Express server running at localhost:' + PORT);
-	});
+
+	// pem module creates credentials on the fly
+	// pem.createCertificate({days:1, selfSigned:true}, function(err, keys){
+	//   https.createServer({key: keys.serviceKey, cert: keys.certificate}, app).listen(PORT);
+	//   console.log('Listening on port ' + PORT);
+	// });
+
+	app.listen(PORT);
+	console.log('Listening on port ' + PORT);
 	/* WEBPACK VAR INJECTION */}.call(exports, ""))
 
 /***/ },
@@ -135,21 +145,13 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Repos = __webpack_require__(6);
-
-	var _Repos2 = _interopRequireDefault(_Repos);
-
-	var _Repo = __webpack_require__(8);
-
-	var _Repo2 = _interopRequireDefault(_Repo);
-
-	var _Home = __webpack_require__(9);
+	var _Home = __webpack_require__(6);
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Login = __webpack_require__(11);
+	var _Account = __webpack_require__(8);
 
-	var _Login2 = _interopRequireDefault(_Login);
+	var _Account2 = _interopRequireDefault(_Account);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -157,7 +159,7 @@
 	  _reactRouter.Route,
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default })
+	  _react2.default.createElement(_reactRouter.Route, { path: '/my-account', component: _Account2.default })
 	); // modules/routes.js
 
 /***/ },
@@ -194,7 +196,7 @@
 	      this.props.children
 	    );
 	  }
-	});
+	}); // modules/App.js
 
 /***/ },
 /* 6 */
@@ -210,187 +212,26 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _NavLink = __webpack_require__(7);
-
-	var _NavLink2 = _interopRequireDefault(_NavLink);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'Repos',
-
-	  contextTypes: {
-	    router: _react2.default.PropTypes.object
-	  },
-
-	  handleSubmit: function handleSubmit(event) {
-	    event.preventDefault();
-	    var userName = event.target.elements[0].value;
-	    var repo = event.target.elements[1].value;
-	    var path = '/repos/' + userName + '/' + repo;
-	    this.context.router.push(path);
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Repos'
-	      ),
-	      _react2.default.createElement(
-	        'ul',
-	        null,
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          _react2.default.createElement(
-	            _NavLink2.default,
-	            { to: '/repos/reactjs/react-router' },
-	            'React Router'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          _react2.default.createElement(
-	            _NavLink2.default,
-	            { to: '/repos/facebook/react' },
-	            'React'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          _react2.default.createElement(
-	            'form',
-	            { onSubmit: this.handleSubmit },
-	            _react2.default.createElement('input', { type: 'text', placeholder: 'userName' }),
-	            ' / ',
-	            ' ',
-	            _react2.default.createElement('input', { type: 'text', placeholder: 'repo' }),
-	            ' ',
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'submit' },
-	              'Go'
-	            )
-	          )
-	        )
-	      ),
-	      this.props.children
-	    );
-	  }
-	});
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; // modules/NavLink.js
-
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(3);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'NavLink',
-	  render: function render() {
-	    return _react2.default.createElement(_reactRouter.Link, _extends({}, this.props, { activeClassName: 'active' }));
-	  }
-	});
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'Repo',
-	  render: function render() {
-	    var _props$params = this.props.params,
-	        userName = _props$params.userName,
-	        repoName = _props$params.repoName;
-
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        userName,
-	        ' / ',
-	        repoName
-	      )
-	    );
-	  }
-	});
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _SearchBar = __webpack_require__(10);
+	var _SearchBar = __webpack_require__(7);
 
 	var _SearchBar2 = _interopRequireDefault(_SearchBar);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// modules/Home.js
 	exports.default = _react2.default.createClass({
 	  displayName: 'Home',
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      _react2.default.createElement(
-	        'div',
-	        { id: 'topcorner' },
-	        _react2.default.createElement(
-	          'a',
-	          { href: '/login' },
-	          'Login'
-	        )
-	      ),
 	      _react2.default.createElement(_SearchBar2.default, null)
 	    );
 	  }
 	});
 
 /***/ },
-/* 10 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -412,10 +253,6 @@
 	    var enteredStr = document.getElementById('searchText').value;
 	    var data = { 'search': enteredStr };
 
-	    console.log('Posting with: ' + enteredStr);
-	    var success = function success() {
-	      console.log('Post success');
-	    };
 	    var url = 'http://localhost:8080/nutri';
 
 	    $.ajax({
@@ -436,7 +273,7 @@
 	      _react2.default.createElement(
 	        'p',
 	        null,
-	        ' What did you eat? '
+	        ' What are you eating? '
 	      ),
 	      _react2.default.createElement('textarea', { id: 'searchText', placeholder: '1 large egg and 50 grams of raw spinach', cols: '80', rows: '1' }),
 	      ' \xA0',
@@ -450,103 +287,92 @@
 	});
 
 /***/ },
-/* 11 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
-
-	var _LoginForm = __webpack_require__(12);
-
-	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _react2.default.createClass({
-	   displayName: 'exports',
+	   displayName: "exports",
 
-	   validateUser: function validateUser(username, password) {
-	      console.log('Validating user....');
-	   },
 	   render: function render() {
 	      return _react2.default.createElement(
-	         'div',
+	         "div",
 	         null,
 	         _react2.default.createElement(
-	            'p',
+	            "p",
 	            null,
-	            ' Login page '
+	            " My Account "
 	         ),
 	         _react2.default.createElement(
-	            'div',
-	            { id: 'topcorner' },
+	            "div",
+	            { id: "topcorner" },
 	            _react2.default.createElement(
-	               'a',
-	               { href: '/' },
-	               'Home'
+	               "a",
+	               { href: "/" },
+	               "Home"
 	            )
-	         ),
-	         _react2.default.createElement(_LoginForm2.default, null)
+	         )
 	      );
 	   }
-	});
+	}); // modules/Account.js
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	module.exports = require("body-parser");
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	module.exports = require("compression");
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	module.exports = require("express");
 
 /***/ },
 /* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'LoginForm',
-
-	  loginEvent: function loginEvent(usrnm, psw) {
-	    console.log('username = ' + usrnm);
-	    console.log('password = ' + psw);
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'textarea',
-	        null,
-	        ' '
-	      ),
-	      _react2.default.createElement(
-	        'textarea',
-	        null,
-	        ' '
-	      ),
-	      _react2.default.createElement(
-	        'button',
-	        { className: 'greenOut' },
-	        ' Login Button '
-	      )
-	    );
-	  }
-	});
+	module.exports = require("serve-favicon");
 
 /***/ },
 /* 13 */
+/***/ function(module, exports) {
+
+	module.exports = require("https");
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = {
+	  key: {
+	    'appId': 'de5c7861',
+	    'appKey': 'cef8bbbab558db96475078af05a797c0'
+	  }
+	};
+
+/***/ },
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var request = __webpack_require__(14);
+	var request = __webpack_require__(16);
 
 	module.exports = {
 
@@ -615,53 +441,22 @@
 	};
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports) {
 
 	module.exports = require("request");
 
 /***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	module.exports = require("express");
-
-/***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	module.exports = require("path");
 
 /***/ },
-/* 17 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  key: {
-	    'appId': 'de5c7861',
-	    'appKey': 'cef8bbbab558db96475078af05a797c0'
-	  }
-	};
-
-/***/ },
 /* 18 */
 /***/ function(module, exports) {
 
-	module.exports = require("compression");
-
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-	module.exports = require("serve-favicon");
-
-/***/ },
-/* 20 */
-/***/ function(module, exports) {
-
-	module.exports = require("body-parser");
+	module.exports = require("pem");
 
 /***/ }
 /******/ ]);

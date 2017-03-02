@@ -1,6 +1,7 @@
+// modules/App.js
 import React from 'react'
 
-export default React.createClass({
+module.exports = React.createClass({
   render() {
     return (
       <div>

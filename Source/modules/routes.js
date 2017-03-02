@@ -2,15 +2,13 @@
 import React from 'react'
 import { Route, IndexRoute } from 'react-router'
 import App from './App'
-import Repos from './Repos'
-import Repo from './Repo'
 import Home from './Home'
-import Login from './Login'
+import Account from './Account'
 
 module.exports = (
-  <Route path="/" component={App}>
+  <Route path='/' component={App}>
     <IndexRoute component={Home}/>
-    <Route path="/login" component={Login}/>
+    <Route path='/my-account' component={Account}/>
   </Route>
 )
 

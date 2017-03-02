@@ -9,11 +9,11 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const express = require('express');
 const favicon = require('serve-favicon');
-const fs = require('fs');
 const https = require('https');
 const keys = require('./public/js/keys.js');
 const nutri = require('./public/js/nutri.js');
 const path = require('path');
+const pem = require('pem');
 
 var app = express();
 
@@ -39,16 +39,19 @@ app.post('/nutri', (req, res) => {
 })
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+  //res.sendFile(path.resolve(__dirname, 'exampleFB.html'))
+   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
 
 var PORT = process.env.PORT || 8080
 
-var options = {
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('cert.pem')
-};
+// pem module creates credentials on the fly
+// pem.createCertificate({days:1, selfSigned:true}, function(err, keys){
+//   https.createServer({key: keys.serviceKey, cert: keys.certificate}, app).listen(PORT);
+//   console.log('Listening on port ' + PORT);
+// });
 
-https.createServer(options, app).listen(PORT);
+app.listen(PORT);
 console.log('Listening on port ' + PORT);
+
 

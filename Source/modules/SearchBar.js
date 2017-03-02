@@ -1,14 +1,10 @@
 import React from 'react'
 
-export default React.createClass({
+module.exports = React.createClass({
   makePost: function() {
       var enteredStr = document.getElementById('searchText').value;
       var data = {'search' : enteredStr};
 
-      console.log('Posting with: ' + enteredStr);
-      var success = function() {
-        console.log('Post success');
-      }
       var url = 'http://localhost:8080/nutri';
 
       $.ajax({

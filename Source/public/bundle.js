@@ -25426,21 +25426,13 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Repos = __webpack_require__(224);
-
-	var _Repos2 = _interopRequireDefault(_Repos);
-
-	var _Repo = __webpack_require__(226);
-
-	var _Repo2 = _interopRequireDefault(_Repo);
-
-	var _Home = __webpack_require__(227);
+	var _Home = __webpack_require__(224);
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Login = __webpack_require__(229);
+	var _Account = __webpack_require__(226);
 
-	var _Login2 = _interopRequireDefault(_Login);
+	var _Account2 = _interopRequireDefault(_Account);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25448,7 +25440,7 @@
 	  _reactRouter.Route,
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/login', component: _Login2.default })
+	  _react2.default.createElement(_reactRouter.Route, { path: '/my-account', component: _Account2.default })
 	); // modules/routes.js
 
 /***/ },
@@ -25485,7 +25477,7 @@
 	      this.props.children
 	    );
 	  }
-	});
+	}); // modules/App.js
 
 /***/ },
 /* 224 */
@@ -25501,187 +25493,26 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _NavLink = __webpack_require__(225);
-
-	var _NavLink2 = _interopRequireDefault(_NavLink);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'Repos',
-
-	  contextTypes: {
-	    router: _react2.default.PropTypes.object
-	  },
-
-	  handleSubmit: function handleSubmit(event) {
-	    event.preventDefault();
-	    var userName = event.target.elements[0].value;
-	    var repo = event.target.elements[1].value;
-	    var path = '/repos/' + userName + '/' + repo;
-	    this.context.router.push(path);
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        'Repos'
-	      ),
-	      _react2.default.createElement(
-	        'ul',
-	        null,
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          _react2.default.createElement(
-	            _NavLink2.default,
-	            { to: '/repos/reactjs/react-router' },
-	            'React Router'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          _react2.default.createElement(
-	            _NavLink2.default,
-	            { to: '/repos/facebook/react' },
-	            'React'
-	          )
-	        ),
-	        _react2.default.createElement(
-	          'li',
-	          null,
-	          _react2.default.createElement(
-	            'form',
-	            { onSubmit: this.handleSubmit },
-	            _react2.default.createElement('input', { type: 'text', placeholder: 'userName' }),
-	            ' / ',
-	            ' ',
-	            _react2.default.createElement('input', { type: 'text', placeholder: 'repo' }),
-	            ' ',
-	            _react2.default.createElement(
-	              'button',
-	              { type: 'submit' },
-	              'Go'
-	            )
-	          )
-	        )
-	      ),
-	      this.props.children
-	    );
-	  }
-	});
-
-/***/ },
-/* 225 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; // modules/NavLink.js
-
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRouter = __webpack_require__(159);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'NavLink',
-	  render: function render() {
-	    return _react2.default.createElement(_reactRouter.Link, _extends({}, this.props, { activeClassName: 'active' }));
-	  }
-	});
-
-/***/ },
-/* 226 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'Repo',
-	  render: function render() {
-	    var _props$params = this.props.params,
-	        userName = _props$params.userName,
-	        repoName = _props$params.repoName;
-
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'h2',
-	        null,
-	        userName,
-	        ' / ',
-	        repoName
-	      )
-	    );
-	  }
-	});
-
-/***/ },
-/* 227 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _SearchBar = __webpack_require__(228);
+	var _SearchBar = __webpack_require__(225);
 
 	var _SearchBar2 = _interopRequireDefault(_SearchBar);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// modules/Home.js
 	exports.default = _react2.default.createClass({
 	  displayName: 'Home',
 	  render: function render() {
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      _react2.default.createElement(
-	        'div',
-	        { id: 'topcorner' },
-	        _react2.default.createElement(
-	          'a',
-	          { href: '/login' },
-	          'Login'
-	        )
-	      ),
 	      _react2.default.createElement(_SearchBar2.default, null)
 	    );
 	  }
 	});
 
 /***/ },
-/* 228 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25703,10 +25534,6 @@
 	    var enteredStr = document.getElementById('searchText').value;
 	    var data = { 'search': enteredStr };
 
-	    console.log('Posting with: ' + enteredStr);
-	    var success = function success() {
-	      console.log('Post success');
-	    };
 	    var url = 'http://localhost:8080/nutri';
 
 	    $.ajax({
@@ -25741,86 +25568,41 @@
 	});
 
 /***/ },
-/* 229 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
-
-	var _LoginForm = __webpack_require__(230);
-
-	var _LoginForm2 = _interopRequireDefault(_LoginForm);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _react2.default.createClass({
-	   displayName: 'exports',
+	   displayName: "exports",
 
-	   validateUser: function validateUser(username, password) {
-	      console.log('Validating user....');
-	   },
 	   render: function render() {
 	      return _react2.default.createElement(
-	         'div',
+	         "div",
 	         null,
 	         _react2.default.createElement(
-	            'p',
+	            "p",
 	            null,
-	            ' Login page '
+	            " My Account "
 	         ),
 	         _react2.default.createElement(
-	            'div',
-	            { id: 'topcorner' },
+	            "div",
+	            { id: "topcorner" },
 	            _react2.default.createElement(
-	               'a',
-	               { href: '/' },
-	               'Home'
+	               "a",
+	               { href: "/" },
+	               "Home"
 	            )
-	         ),
-	         _react2.default.createElement(_LoginForm2.default, null)
+	         )
 	      );
 	   }
-	});
-
-/***/ },
-/* 230 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = _react2.default.createClass({
-	  displayName: 'LoginForm',
-
-	  loginEvent: function loginEvent(usrnm, psw) {
-	    console.log('username = ' + usrnm);
-	    console.log('password = ' + psw);
-	  },
-	  loadFb: function loadFb() {},
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(
-	        'button',
-	        { className: 'greenOut' },
-	        ' Login Button '
-	      )
-	    );
-	  }
-	});
+	}); // modules/Account.js
 
 /***/ }
 /******/ ]);
