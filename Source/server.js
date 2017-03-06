@@ -10,8 +10,8 @@ const compression = require('compression');
 const express = require('express');
 const favicon = require('serve-favicon');
 const https = require('https');
-const keys = require('./public/js/keys.js');
 const nutri = require('./public/js/nutri.js');
+const keys = require('./public/js/keys.js');
 const path = require('path');
 const pem = require('pem');
 
@@ -25,11 +25,11 @@ app.use(bodyParser.json());
 
 // Serve static stuff like index.css from directory 'public'
 app.use(express.static('public'))
-// app.use(express.static(__dirname + '/public/images'))
 
 // Favicon
 app.use(favicon('public/images/donut.ico'));
 
+// Endpoint for POST calls
 app.post('/nutri', (req, res) => {
   // testing purposes
   console.log(req.body);
@@ -39,7 +39,6 @@ app.post('/nutri', (req, res) => {
 })
 
 app.get('*', (req, res) => {
-  //res.sendFile(path.resolve(__dirname, 'exampleFB.html'))
    res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
 

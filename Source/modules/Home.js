@@ -5,9 +5,7 @@ import SearchBar from './SearchBar'
 module.exports = React.createClass({
   render() {
     return ( 
-      <div>
-        <SearchBar />
-      </div>
+        <SearchBar placeholder='1 large egg and 50 grams of raw spinach' />
     )
   }
 })

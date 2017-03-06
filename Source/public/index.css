@@ -17,6 +17,14 @@ a {
   color: #3ae64b;
 }
 
+#searchBtn {
+  position: absolute;
+}
+#searchDiv {
+  display: inline-block;
+  position: relative;
+}
+
 .topCorner{
   position: absolute;
   top: 12px;
@@ -24,17 +32,9 @@ a {
   font-size: 18px;
 }
 
-#searchBtn {
-  position: absolute;
-}
-
-#searchDiv {
-  display: inline-block;
-  position: relative;
-}
-
 .greenOut {
   border: 3px solid #3ae64b;
+  background-color: #e2e2e2;
   display: inline-block;
   cursor: pointer;
   color: #000000;
@@ -44,7 +44,7 @@ a {
   text-decoration: none;
 }
 .greenOut:hover {
-  background-color: #e2e2e2;
+  background-color: #bfbfbf;
 }
 .greenOut:focus{
   outline: 0;
@@ -52,6 +52,4 @@ a {
 .greenOut:active {
   position: relative;
 }
-
-
 

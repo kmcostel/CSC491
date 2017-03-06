@@ -1,7 +1,13 @@
 import React from 'react'
+import Results from './Results.js'
 
-module.exports = React.createClass({
-  makePost: function() {
+export default class SearchBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {results: {}}
+  }
+
+  makePost() {
       var enteredStr = document.getElementById('searchText').value;
       var data = {'search' : enteredStr};
 
@@ -11,20 +17,26 @@ module.exports = React.createClass({
         url: url,
         type: 'POST',
         data: JSON.stringify(data),
-        contentType: "application/json; charset=utf-8",
+        contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         success: function(response){
           console.log(response);
+          /*this.setState({
+            results: response
+          });*/
         }
       })
-   },
-   render: function() {
+   }
+
+   render() {
       return (
          <div id='searchDiv'>
            <p> What are you eating? </p>
-           <textarea id='searchText' placeholder='1 large egg and 50 grams of raw spinach' cols='80' rows='1'/> &nbsp;
+           <textarea id='searchText' placeholder={this.props.placeholder} cols='80' rows='1'/> &nbsp;
            <button id='searchBtn' className='greenOut' onClick={this.makePost}> Search </button>
+           <Results results={this.state.results} />
          </div>
-      )
+      );
    }
-});
+}
+

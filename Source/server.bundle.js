@@ -61,15 +61,15 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Use these to match the url to routes and then render
-	var bodyParser = __webpack_require__(9);
-	var compression = __webpack_require__(10);
-	var express = __webpack_require__(11);
-	var favicon = __webpack_require__(12);
-	var https = __webpack_require__(13);
-	var keys = __webpack_require__(14);
+	var bodyParser = __webpack_require__(10);
+	var compression = __webpack_require__(11);
+	var express = __webpack_require__(12);
+	var favicon = __webpack_require__(13);
+	var https = __webpack_require__(14);
 	var nutri = __webpack_require__(15);
-	var path = __webpack_require__(17);
-	var pem = __webpack_require__(18);
+	var keys = __webpack_require__(17);
+	var path = __webpack_require__(18);
+	var pem = __webpack_require__(19);
 
 	var app = express();
 
@@ -81,11 +81,11 @@
 
 	// Serve static stuff like index.css from directory 'public'
 	app.use(express.static('public'));
-	// app.use(express.static(__dirname + '/public/images'))
 
 	// Favicon
 	app.use(favicon('public/images/donut.ico'));
 
+	// Endpoint for POST calls
 	app.post('/nutri', function (req, res) {
 	  // testing purposes
 	  console.log(req.body);
@@ -95,7 +95,6 @@
 	});
 
 	app.get('*', function (req, res) {
-	  //res.sendFile(path.resolve(__dirname, 'exampleFB.html'))
 	  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 	});
 
@@ -149,7 +148,7 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Account = __webpack_require__(8);
+	var _Account = __webpack_require__(9);
 
 	var _Account2 = _interopRequireDefault(_Account);
 
@@ -168,18 +167,14 @@
 
 	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _react2.default.createClass({
-	  displayName: "App",
+	module.exports = _react2.default.createClass({
+	  displayName: "exports",
 	  render: function render() {
 	    return _react2.default.createElement(
 	      "div",
@@ -204,10 +199,6 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -219,14 +210,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// modules/Home.js
-	exports.default = _react2.default.createClass({
-	  displayName: 'Home',
+	module.exports = _react2.default.createClass({
+	  displayName: 'exports',
 	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      null,
-	      _react2.default.createElement(_SearchBar2.default, null)
-	    );
+	    return _react2.default.createElement(_SearchBar2.default, { placeholder: '1 large egg and 50 grams of raw spinach' });
 	  }
 	});
 
@@ -240,57 +227,164 @@
 	  value: true
 	});
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Results = __webpack_require__(8);
+
+	var _Results2 = _interopRequireDefault(_Results);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SearchBar = function (_React$Component) {
+	  _inherits(SearchBar, _React$Component);
+
+	  function SearchBar(props) {
+	    _classCallCheck(this, SearchBar);
+
+	    var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
+
+	    _this.state = { results: {} };
+	    return _this;
+	  }
+
+	  _createClass(SearchBar, [{
+	    key: 'makePost',
+	    value: function makePost() {
+	      var enteredStr = document.getElementById('searchText').value;
+	      var data = { 'search': enteredStr };
+
+	      var url = 'http://localhost:8080/nutri';
+
+	      $.ajax({
+	        url: url,
+	        type: 'POST',
+	        data: JSON.stringify(data),
+	        contentType: 'application/json; charset=utf-8',
+	        dataType: 'json',
+	        success: function success(response) {
+	          console.log(response);
+	          /*this.setState({
+	            results: response
+	          });*/
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'searchDiv' },
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          ' What are you eating? '
+	        ),
+	        _react2.default.createElement('textarea', { id: 'searchText', placeholder: this.props.placeholder, cols: '80', rows: '1' }),
+	        ' \xA0',
+	        _react2.default.createElement(
+	          'button',
+	          { id: 'searchBtn', className: 'greenOut', onClick: this.makePost },
+	          ' Search '
+	        ),
+	        _react2.default.createElement(_Results2.default, { results: this.state.results })
+	      );
+	    }
+	  }]);
+
+	  return SearchBar;
+	}(_react2.default.Component);
+
+	exports.default = SearchBar;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _react = __webpack_require__(1);
 
 	var _react2 = _interopRequireDefault(_react);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = _react2.default.createClass({
-	  displayName: 'SearchBar',
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	  makePost: function makePost() {
-	    var enteredStr = document.getElementById('searchText').value;
-	    var data = { 'search': enteredStr };
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	    var url = 'http://localhost:8080/nutri';
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Results.js
 
-	    $.ajax({
-	      url: url,
-	      type: 'POST',
-	      data: JSON.stringify(data),
-	      contentType: "application/json; charset=utf-8",
-	      dataType: 'json',
-	      success: function success(response) {
-	        console.log(response);
-	      }
-	    });
-	  },
-	  render: function render() {
-	    return _react2.default.createElement(
-	      'div',
-	      { id: 'searchDiv' },
-	      _react2.default.createElement(
-	        'p',
-	        null,
-	        ' What are you eating? '
-	      ),
-	      _react2.default.createElement('textarea', { id: 'searchText', placeholder: '1 large egg and 50 grams of raw spinach', cols: '80', rows: '1' }),
-	      ' \xA0',
-	      _react2.default.createElement(
-	        'button',
-	        { id: 'searchBtn', className: 'greenOut', onClick: this.makePost },
-	        ' Search '
-	      )
-	    );
+
+	var Results = function (_React$Component) {
+	  _inherits(Results, _React$Component);
+
+	  function Results(props) {
+	    _classCallCheck(this, Results);
+
+	    var _this = _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
+
+	    _this.state = { results: {} };
+	    return _this;
 	  }
-	});
+
+	  _createClass(Results, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'resultDiv' },
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          ' Fat = ',
+	          this.props.fat,
+	          ' '
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          ' Carbs = ',
+	          this.props.carbs,
+	          ' '
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          ' Sugar = ',
+	          this.props.sugar,
+	          ' '
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Results;
+	}(_react2.default.Component);
+
+	exports.default = Results;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var _react = __webpack_require__(1);
 
@@ -299,72 +393,50 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	module.exports = _react2.default.createClass({
-	   displayName: "exports",
+	   displayName: 'exports',
 
 	   render: function render() {
 	      return _react2.default.createElement(
-	         "div",
+	         'div',
 	         null,
 	         _react2.default.createElement(
-	            "p",
+	            'p',
 	            null,
-	            " My Account "
-	         ),
-	         _react2.default.createElement(
-	            "div",
-	            { id: "topcorner" },
-	            _react2.default.createElement(
-	               "a",
-	               { href: "/" },
-	               "Home"
-	            )
+	            ' My Account '
 	         )
 	      );
 	   }
 	}); // modules/Account.js
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = require("body-parser");
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	module.exports = require("compression");
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = require("express");
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = require("serve-favicon");
 
 /***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	module.exports = require("https");
-
-/***/ },
 /* 14 */
 /***/ function(module, exports) {
 
-	'use strict';
-
-	module.exports = {
-	  key: {
-	    'appId': 'de5c7861',
-	    'appKey': 'cef8bbbab558db96475078af05a797c0'
-	  }
-	};
+	module.exports = require("https");
 
 /***/ },
 /* 15 */
@@ -378,32 +450,34 @@
 
 	  makePost: function makePost(foodSearch, appKey, appId) {
 
-	    var printBody = function printBody(body) {
-	      var str = '';
+	    var getResult = function getResult(body) {
+	      var response = {};
+	      var curItem;
+
 	      if (body['foods']) {
-	        str += body['foods'].length + ' food items retrieved.';
+
+	        response.numItems = body['foods'].length;
+	        response.items = [];
 
 	        for (var i = 0; i < body['foods'].length; i++) {
-	          str += '\n' + body['foods'][i].food_name;
+	          curItem = {};
 
-	          str += '\ncalories: ' + body['foods'][i].nf_calories;
+	          curItem.name = body['foods'][i].food_name;
+	          curItem.calories = body['foods'][i].nf_calories;
+	          curItem.grams = body['foods'][i].serving_weight_grams;
+	          curItem.carbs = body['foods'][i].nf_total_carbohydrate;
+	          curItem.protein = body['foods'][i].nf_protein;
+	          curItem.fat = body['foods'][i].nf_total_fat;
 
-	          str += '\nserving weight (grams): ' + body['foods'][i].serving_weight_grams;
-
-	          str += '\ntotal carbs: ' + body['foods'][i].nf_total_carbohydrate;
-
-	          str += '\ntotal protein: ' + body['foods'][i].nf_protein;
-
-	          str += '\ntotal fat: ' + body['foods'][i].nf_total_fat;
-
-	          str += '\n';
+	          // When curItem is reset to {}, does this ruin everything?
+	          response.items.push(curItem);
 	        }
 	      } else {
-	        str = 'Nothing matched the search: ' + foodSearch;
+	        response.error = 'Nothing matched the search: ' + foodSearch;
 	      }
 
-	      console.log(str);
-	      return str;
+	      console.log(response);
+	      return response;
 	    };
 
 	    var headers = {
@@ -425,18 +499,18 @@
 	      json: true
 	    };
 
-	    var str = '';
+	    var response = {};
 
 	    request(options, function (error, response, body) {
 	      if (error === null) {
-	        str = printBody(body);
+	        response = getResult(body);
 	      } else {
 	        console.log('error: ' + error);
-	        str = 'error: ' + error;
+	        response.error = error;
 	      }
 	    });
 
-	    return str;
+	    return response;
 	  }
 	};
 
@@ -450,10 +524,23 @@
 /* 17 */
 /***/ function(module, exports) {
 
-	module.exports = require("path");
+	'use strict';
+
+	module.exports = {
+	  key: {
+	    'appId': 'de5c7861',
+	    'appKey': 'cef8bbbab558db96475078af05a797c0'
+	  }
+	};
 
 /***/ },
 /* 18 */
+/***/ function(module, exports) {
+
+	module.exports = require("path");
+
+/***/ },
+/* 19 */
 /***/ function(module, exports) {
 
 	module.exports = require("pem");
