@@ -25535,13 +25535,21 @@
 
 	    var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
-	    _this.state = { results: {} };
+	    _this.updateState = _this.updateState.bind(_this);
+	    _this.makePost = _this.makePost.bind(_this);
+
+	    _this.state = { items: [] };
 	    return _this;
 	  }
 
 	  _createClass(SearchBar, [{
+	    key: 'updateState',
+	    value: function updateState(response) {
+	      this.setState({ items: response.items });
+	    }
+	  }, {
 	    key: 'makePost',
-	    value: function makePost() {
+	    value: function makePost(callback) {
 	      var enteredStr = document.getElementById('searchText').value;
 	      var data = { 'search': enteredStr };
 
@@ -25554,16 +25562,15 @@
 	        contentType: 'application/json; charset=utf-8',
 	        dataType: 'json',
 	        success: function success(response) {
-	          console.log(response);
-	          /*this.setState({
-	            results: response
-	          });*/
+	          callback(response);
 	        }
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'searchDiv' },
@@ -25576,10 +25583,12 @@
 	        ' \xA0',
 	        _react2.default.createElement(
 	          'button',
-	          { id: 'searchBtn', className: 'greenOut', onClick: this.makePost },
+	          { id: 'searchBtn', className: 'greenOut', onClick: function onClick() {
+	              return _this2.makePost(_this2.updateState);
+	            } },
 	          ' Search '
 	        ),
-	        _react2.default.createElement(_Results2.default, { results: this.state.results })
+	        _react2.default.createElement(_Results2.default, { items: this.state.items })
 	      );
 	    }
 	  }]);
@@ -25620,39 +25629,53 @@
 	  function Results(props) {
 	    _classCallCheck(this, Results);
 
-	    var _this = _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
-
-	    _this.state = { results: {} };
-	    return _this;
+	    return _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
 	  }
 
 	  _createClass(Results, [{
 	    key: 'render',
 	    value: function render() {
+	      var foods = this.props.items.map(function (food, i) {
+	        return _react2.default.createElement(
+	          'div',
+	          { key: i },
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            ' ',
+	            food.grams,
+	            ' grams of ',
+	            food.name,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            ' Fat = ',
+	            food.fat,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            ' Carbs = ',
+	            food.carbs,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            ' Sugar = ',
+	            food.sugar,
+	            ' '
+	          )
+	        );
+	      });
+
 	      return _react2.default.createElement(
 	        'div',
-	        { id: 'resultDiv' },
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Fat = ',
-	          this.props.fat,
-	          ' '
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Carbs = ',
-	          this.props.carbs,
-	          ' '
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Sugar = ',
-	          this.props.sugar,
-	          ' '
-	        )
+	        { id: 'lineContainer' },
+	        foods
 	      );
 	    }
 	  }]);

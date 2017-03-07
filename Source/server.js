@@ -9,11 +9,13 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const express = require('express');
 const favicon = require('serve-favicon');
+const fillResponse = require('./public/js/fillResponse.js');
 const https = require('https');
-const nutri = require('./public/js/nutri.js');
 const keys = require('./public/js/keys.js');
+const makeOptions = require('./public/js/getOptions.js');
 const path = require('path');
 const pem = require('pem');
+const request = require('request');
 
 var app = express();
 
@@ -31,11 +33,20 @@ app.use(favicon('public/images/donut.ico'));
 
 // Endpoint for POST calls
 app.post('/nutri', (req, res) => {
-  // testing purposes
-  console.log(req.body);
+  var options = makeOptions.generate(req.body.search, keys.key.appKey, keys.key.appId);
+  var answer = {};
+  res.setHeader('Content-Type', 'application/json');
 
-  var searchResult = nutri.makePost(req.body.search, keys.key.appKey, keys.key.appId);
-  res.send(searchResult);
+    request(options, function(error, response, body) {
+      if (error === null) {
+        answer = fillResponse.getResult(body);
+        res.send(answer);
+      }
+      else {
+        answer.error = error;
+        res.send(answer);
+      }
+    });
 })
 
 app.get('*', (req, res) => {
@@ -52,5 +63,4 @@ var PORT = process.env.PORT || 8080
 
 app.listen(PORT);
 console.log('Listening on port ' + PORT);
-
 

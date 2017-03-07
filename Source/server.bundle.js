@@ -65,11 +65,13 @@
 	var compression = __webpack_require__(11);
 	var express = __webpack_require__(12);
 	var favicon = __webpack_require__(13);
-	var https = __webpack_require__(14);
-	var nutri = __webpack_require__(15);
-	var keys = __webpack_require__(17);
+	var fillResponse = __webpack_require__(14);
+	var https = __webpack_require__(15);
+	var keys = __webpack_require__(16);
+	var makeOptions = __webpack_require__(17);
 	var path = __webpack_require__(18);
 	var pem = __webpack_require__(19);
+	var request = __webpack_require__(20);
 
 	var app = express();
 
@@ -87,11 +89,19 @@
 
 	// Endpoint for POST calls
 	app.post('/nutri', function (req, res) {
-	  // testing purposes
-	  console.log(req.body);
+	  var options = makeOptions.generate(req.body.search, keys.key.appKey, keys.key.appId);
+	  var answer = {};
+	  res.setHeader('Content-Type', 'application/json');
 
-	  var searchResult = nutri.makePost(req.body.search, keys.key.appKey, keys.key.appId);
-	  res.send(searchResult);
+	  request(options, function (error, response, body) {
+	    if (error === null) {
+	      answer = fillResponse.getResult(body);
+	      res.send(answer);
+	    } else {
+	      answer.error = error;
+	      res.send(answer);
+	    }
+	  });
 	});
 
 	app.get('*', function (req, res) {
@@ -253,13 +263,21 @@
 
 	    var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
-	    _this.state = { results: {} };
+	    _this.updateState = _this.updateState.bind(_this);
+	    _this.makePost = _this.makePost.bind(_this);
+
+	    _this.state = { items: [] };
 	    return _this;
 	  }
 
 	  _createClass(SearchBar, [{
+	    key: 'updateState',
+	    value: function updateState(response) {
+	      this.setState({ items: response.items });
+	    }
+	  }, {
 	    key: 'makePost',
-	    value: function makePost() {
+	    value: function makePost(callback) {
 	      var enteredStr = document.getElementById('searchText').value;
 	      var data = { 'search': enteredStr };
 
@@ -272,16 +290,15 @@
 	        contentType: 'application/json; charset=utf-8',
 	        dataType: 'json',
 	        success: function success(response) {
-	          console.log(response);
-	          /*this.setState({
-	            results: response
-	          });*/
+	          callback(response);
 	        }
 	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'searchDiv' },
@@ -294,10 +311,12 @@
 	        ' \xA0',
 	        _react2.default.createElement(
 	          'button',
-	          { id: 'searchBtn', className: 'greenOut', onClick: this.makePost },
+	          { id: 'searchBtn', className: 'greenOut', onClick: function onClick() {
+	              return _this2.makePost(_this2.updateState);
+	            } },
 	          ' Search '
 	        ),
-	        _react2.default.createElement(_Results2.default, { results: this.state.results })
+	        _react2.default.createElement(_Results2.default, { items: this.state.items })
 	      );
 	    }
 	  }]);
@@ -338,39 +357,53 @@
 	  function Results(props) {
 	    _classCallCheck(this, Results);
 
-	    var _this = _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
-
-	    _this.state = { results: {} };
-	    return _this;
+	    return _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
 	  }
 
 	  _createClass(Results, [{
 	    key: 'render',
 	    value: function render() {
+	      var foods = this.props.items.map(function (food, i) {
+	        return _react2.default.createElement(
+	          'div',
+	          { key: i },
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            ' ',
+	            food.grams,
+	            ' grams of ',
+	            food.name,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            ' Fat = ',
+	            food.fat,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            ' Carbs = ',
+	            food.carbs,
+	            ' '
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            null,
+	            ' Sugar = ',
+	            food.sugar,
+	            ' '
+	          )
+	        );
+	      });
+
 	      return _react2.default.createElement(
 	        'div',
-	        { id: 'resultDiv' },
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Fat = ',
-	          this.props.fat,
-	          ' '
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Carbs = ',
-	          this.props.carbs,
-	          ' '
-	        ),
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' Sugar = ',
-	          this.props.sugar,
-	          ' '
-	        )
+	        { id: 'lineContainer' },
+	        foods
 	      );
 	    }
 	  }]);
@@ -436,49 +469,69 @@
 /* 14 */
 /***/ function(module, exports) {
 
-	module.exports = require("https");
+	'use strict';
+
+	module.exports = {
+	  getResult: function getResult(body) {
+	    var response = {};
+	    var curItem;
+
+	    if (body['foods']) {
+
+	      response.numItems = body['foods'].length;
+	      response.items = [];
+
+	      for (var i = 0; i < body['foods'].length; i++) {
+	        curItem = {};
+
+	        curItem.name = body['foods'][i].food_name;
+	        curItem.calories = body['foods'][i].nf_calories;
+	        curItem.grams = body['foods'][i].serving_weight_grams;
+	        curItem.carbs = body['foods'][i].nf_total_carbohydrate;
+	        curItem.protein = body['foods'][i].nf_protein;
+	        curItem.fat = body['foods'][i].nf_total_fat;
+	        curItem.sugar = body['foods'][i].nf_sugars;
+	        curItem.fiber = body['foods'][i].nf_dietary_fiber;
+	        curItem.quantity = body['foods'][i].quantity;
+
+	        response.items.push(curItem);
+	      }
+	    } else {
+	      response.error = 'Nothing matched the search';
+	    }
+
+	    return response;
+	  }
+	};
 
 /***/ },
 /* 15 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
+
+	module.exports = require("https");
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
 
 	'use strict';
 
-	var request = __webpack_require__(16);
+	module.exports = {
+	  key: {
+	    'appId': 'de5c7861',
+	    'appKey': 'cef8bbbab558db96475078af05a797c0'
+	  }
+	};
+
+/***/ },
+/* 17 */
+/***/ function(module, exports) {
+
+	'use strict';
 
 	module.exports = {
 
-	  makePost: function makePost(foodSearch, appKey, appId) {
-
-	    var getResult = function getResult(body) {
-	      var response = {};
-	      var curItem;
-
-	      if (body['foods']) {
-
-	        response.numItems = body['foods'].length;
-	        response.items = [];
-
-	        for (var i = 0; i < body['foods'].length; i++) {
-	          curItem = {};
-
-	          curItem.name = body['foods'][i].food_name;
-	          curItem.calories = body['foods'][i].nf_calories;
-	          curItem.grams = body['foods'][i].serving_weight_grams;
-	          curItem.carbs = body['foods'][i].nf_total_carbohydrate;
-	          curItem.protein = body['foods'][i].nf_protein;
-	          curItem.fat = body['foods'][i].nf_total_fat;
-
-	          // When curItem is reset to {}, does this ruin everything?
-	          response.items.push(curItem);
-	        }
-	      } else {
-	        response.error = 'Nothing matched the search: ' + foodSearch;
-	      }
-
-	      console.log(response);
-	      return response;
-	    };
+	  generate: function generate(foodSearch, appKey, appId) {
 
 	    var headers = {
 	      'x-app-key': appKey,
@@ -488,7 +541,6 @@
 
 	    var body = {
 	      query: foodSearch
-	      // fields: ['item_name','brand_name','nf_calories','nf_sodium','item_type']
 	    };
 
 	    var options = {
@@ -499,37 +551,7 @@
 	      json: true
 	    };
 
-	    var response = {};
-
-	    request(options, function (error, response, body) {
-	      if (error === null) {
-	        response = getResult(body);
-	      } else {
-	        console.log('error: ' + error);
-	        response.error = error;
-	      }
-	    });
-
-	    return response;
-	  }
-	};
-
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-	module.exports = require("request");
-
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = {
-	  key: {
-	    'appId': 'de5c7861',
-	    'appKey': 'cef8bbbab558db96475078af05a797c0'
+	    return options;
 	  }
 	};
 
@@ -544,6 +566,12 @@
 /***/ function(module, exports) {
 
 	module.exports = require("pem");
+
+/***/ },
+/* 20 */
+/***/ function(module, exports) {
+
+	module.exports = require("request");
 
 /***/ }
 /******/ ]);
