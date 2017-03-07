@@ -19,10 +19,8 @@ export default class SearchBar extends React.Component {
       var enteredStr = document.getElementById('searchText').value;
       var data = {'search' : enteredStr};
 
-      var url = 'http://localhost:8080/nutri';
-
       $.ajax({
-        url: url,
+        url: 'http://localhost:8080/nutri',
         type: 'POST',
         data: JSON.stringify(data),
         contentType: 'application/json; charset=utf-8',
@@ -30,10 +28,8 @@ export default class SearchBar extends React.Component {
         success: function(response){
           callback(response);
         }
-      });
-      
+      });   
    }
-
 
    render() {
       return (

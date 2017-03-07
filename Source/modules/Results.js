@@ -11,9 +11,9 @@ export default class Results extends React.Component {
       return (
         <div key={i}>
           <p> {food.grams} grams of {food.name} </p>
-          <p> Fat = {food.fat} </p>
-          <p> Carbs = {food.carbs} </p>
-          <p> Sugar = {food.sugar} </p>
+          <p> Fat = {food.fat} grams </p>
+          <p> Carbs = {food.carbs} grams </p>
+          <p> Sugar = {food.sugar} grams </p>
         </div>
       );
     });
