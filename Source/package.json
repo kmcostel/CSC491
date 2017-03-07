@@ -27,7 +27,6 @@
     "pem": "^1.9.4",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
-    "react-facebook-login": "^3.5.0",
     "react-router": "^2.8.1",
     "request": "^2.79.0",
     "serve-favicon": "^2.3.2",
