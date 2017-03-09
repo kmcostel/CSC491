@@ -158,23 +158,18 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Account = __webpack_require__(10);
+	var _Account = __webpack_require__(11);
 
 	var _Account2 = _interopRequireDefault(_Account);
 
-	var _Login = __webpack_require__(11);
-
-	var _Login2 = _interopRequireDefault(_Login);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// modules/routes.js
 	module.exports = _react2.default.createElement(
 	  _reactRouter.Route,
 	  { path: '/', component: _App2.default },
 	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/my-account', component: _Account2.default })
-	);
+	); // modules/routes.js
 
 /***/ },
 /* 5 */
@@ -284,7 +279,7 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(_FacebookButton2.default, { fb: FB }),
-	        _react2.default.createElement(_SearchBar2.default, { placeholder: '1 large egg and 50 grams of raw spinach' })
+	        _react2.default.createElement(_SearchBar2.default, { placeholder: '50 grams of raw spinach and 1 cup of pineapple' })
 	      );
 	    }
 	  }]);
@@ -494,6 +489,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _Mark = __webpack_require__(10);
+
+	var _Mark2 = _interopRequireDefault(_Mark);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -512,9 +511,13 @@
 
 	      _this.FB = props.fb;
 
-	      _this.state = {
-	         message: ""
-	      };
+	      _this.FB.getLoginStatus(function (response) {
+	         console.log('Getting login status');
+	         console.log(response);
+	         this.state = {
+	            user: response
+	         };
+	      });
 
 	      return _this;
 	   }
@@ -528,14 +531,14 @@
 	   }, {
 	      key: 'onStatusChange',
 	      value: function onStatusChange(response) {
-	         console.log(response);
 	         var self = this;
 
 	         if (response.status === "connected") {
 	            this.FB.api('/me', function (response) {
-	               var message = "Welcome " + response.name;
+	               console.log('Logging response');
+	               console.log(response);
 	               self.setState({
-	                  message: message
+	                  user: response
 	               });
 	            });
 	         }
@@ -544,7 +547,7 @@
 	      key: 'onLogout',
 	      value: function onLogout(response) {
 	         this.setState({
-	            message: ""
+	            message: "Bye"
 	         });
 	      }
 	   }, {
@@ -560,11 +563,7 @@
 	               'data-show-faces': 'false',
 	               'data-auto-logout-link': 'true'
 	            }),
-	            _react2.default.createElement(
-	               'div',
-	               null,
-	               this.state.message
-	            )
+	            _react2.default.createElement(_Mark2.default, { user: this.state })
 	         );
 	      }
 	   }]);
@@ -577,6 +576,54 @@
 
 /***/ },
 /* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	   value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Mark = function (_React$Component) {
+	   _inherits(Mark, _React$Component);
+
+	   function Mark(props) {
+	      _classCallCheck(this, Mark);
+
+	      var _this = _possibleConstructorReturn(this, (Mark.__proto__ || Object.getPrototypeOf(Mark)).call(this, props));
+
+	      _this.state = { user: props.user };
+	      return _this;
+	   }
+
+	   _createClass(Mark, [{
+	      key: 'render',
+	      value: function render() {
+	         return _react2.default.createElement('div', null);
+	      }
+	   }]);
+
+	   return Mark;
+	}(_react2.default.Component);
+
+	exports.default = Mark;
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -602,103 +649,6 @@
 	      );
 	   }
 	}); // modules/Account.js
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	   value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var FacebookButton = function (_React$Component) {
-	   _inherits(FacebookButton, _React$Component);
-
-	   function FacebookButton(props) {
-	      _classCallCheck(this, FacebookButton);
-
-	      var _this = _possibleConstructorReturn(this, (FacebookButton.__proto__ || Object.getPrototypeOf(FacebookButton)).call(this, props));
-
-	      _this.FB = props.fb;
-
-	      _this.state = {
-	         message: ""
-	      };
-
-	      return _this;
-	   }
-
-	   _createClass(FacebookButton, [{
-	      key: 'componentDidMount',
-	      value: function componentDidMount() {
-	         this.FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
-	         this.FB.Event.subscribe('auth.statusChange', this.onStatusChange.bind(this));
-	      }
-	   }, {
-	      key: 'onStatusChange',
-	      value: function onStatusChange(response) {
-	         console.log(response);
-	         var self = this;
-
-	         if (response.status === "connected") {
-	            this.FB.api('/me', function (response) {
-	               var message = "Welcome " + response.name;
-	               self.setState({
-	                  message: message
-	               });
-	            });
-	         }
-	      }
-	   }, {
-	      key: 'onLogout',
-	      value: function onLogout(response) {
-	         this.setState({
-	            message: ""
-	         });
-	      }
-	   }, {
-	      key: 'render',
-	      value: function render() {
-	         return _react2.default.createElement(
-	            'div',
-	            null,
-	            _react2.default.createElement('div', {
-	               className: 'fb-login-button',
-	               'data-max-rows': '1',
-	               'data-size': 'xlarge',
-	               'data-show-faces': 'false',
-	               'data-auto-logout-link': 'true'
-	            }),
-	            _react2.default.createElement(
-	               'div',
-	               null,
-	               this.state.message
-	            )
-	         );
-	      }
-	   }]);
-
-	   return FacebookButton;
-	}(_react2.default.Component);
-
-	exports.default = FacebookButton;
-	;
 
 /***/ },
 /* 12 */

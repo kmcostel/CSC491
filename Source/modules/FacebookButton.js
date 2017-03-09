@@ -1,4 +1,5 @@
 import React from 'react';
+import Mark from './Mark.js';
 
 export default class FacebookButton extends React.Component {
    constructor(props) {
@@ -6,9 +7,13 @@ export default class FacebookButton extends React.Component {
 
       this.FB = props.fb;
 
-      this.state = {
-         message: ""
-      };
+      this.FB.getLoginStatus(function(response) {
+         console.log('Getting login status');
+         console.log(response);
+         this.state = {
+            user: response   
+         }
+      });
 
    }
 
@@ -20,23 +25,23 @@ export default class FacebookButton extends React.Component {
    }
       
    onStatusChange(response) {
-      console.log( response );
       var self = this;
 
       if( response.status === "connected" ) {
          this.FB.api('/me', function(response) {
-            var message = "Welcome " + response.name;
+            console.log('Logging response');
+            console.log( response );
             self.setState({
-               message: message
+               user: response
             });
          })
       }
    }
 
    onLogout(response) {
-      this.setState({
-         message: ""
-      });
+      /*this.setState({
+         message: "Bye"
+      });*/
    }
 
    render() {
@@ -50,7 +55,7 @@ export default class FacebookButton extends React.Component {
                data-auto-logout-link="true"
                >
             </div>
-            <div>{this.state.message}</div>
+            <Mark user={this.state} />
          </div>
       );
    }
