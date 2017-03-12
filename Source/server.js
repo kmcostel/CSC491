@@ -13,6 +13,7 @@ const fillResponse = require('./public/js/fillResponse.js');
 const https = require('https');
 const keys = require('./public/js/keys.js');
 const makeOptions = require('./public/js/getOptions.js');
+const ml = require('./public/js/ml.js'); // MarkLogic module
 const path = require('path');
 const pem = require('pem');
 const request = require('request');
@@ -34,6 +35,7 @@ app.use(favicon('public/images/donut.ico'));
 // Endpoint for POST calls
 app.post('/nutri', (req, res) => {
   var options = makeOptions.generate(req.body.search, keys.key.appKey, keys.key.appId);
+  console.log(req.body.userId);
   var answer = {};
   res.setHeader('Content-Type', 'application/json');
 
@@ -47,11 +49,16 @@ app.post('/nutri', (req, res) => {
         res.send(answer);
       }
     });
-})
+});
+
+app.post('/ml', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send({a: 'b'});
+});
 
 app.get('*', (req, res) => {
    res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-})
+});
 
 var PORT = process.env.PORT || 8080
 

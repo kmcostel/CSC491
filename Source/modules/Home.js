@@ -8,7 +8,7 @@ export default class Home extends React.Component {
     return ( 
         <div>
           <FacebookButton fb={FB}/>
-          <SearchBar placeholder='50 grams of raw spinach and 1 cup of pineapple' />
+          <SearchBar fb={FB} placeholder='50 grams of raw spinach and 1 cup of pineapple' />          
         </div>
     )
   }

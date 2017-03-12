@@ -61,17 +61,18 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Use these to match the url to routes and then render
-	var bodyParser = __webpack_require__(12);
-	var compression = __webpack_require__(13);
-	var express = __webpack_require__(14);
-	var favicon = __webpack_require__(15);
-	var fillResponse = __webpack_require__(16);
-	var https = __webpack_require__(17);
-	var keys = __webpack_require__(18);
-	var makeOptions = __webpack_require__(19);
-	var path = __webpack_require__(20);
-	var pem = __webpack_require__(21);
-	var request = __webpack_require__(22);
+	var bodyParser = __webpack_require__(10);
+	var compression = __webpack_require__(11);
+	var express = __webpack_require__(12);
+	var favicon = __webpack_require__(13);
+	var fillResponse = __webpack_require__(14);
+	var https = __webpack_require__(15);
+	var keys = __webpack_require__(16);
+	var makeOptions = __webpack_require__(17);
+	var ml = __webpack_require__(18); // MarkLogic module
+	var path = __webpack_require__(21);
+	var pem = __webpack_require__(22);
+	var request = __webpack_require__(23);
 
 	var app = express();
 
@@ -90,6 +91,7 @@
 	// Endpoint for POST calls
 	app.post('/nutri', function (req, res) {
 	  var options = makeOptions.generate(req.body.search, keys.key.appKey, keys.key.appId);
+	  console.log(req.body.userId);
 	  var answer = {};
 	  res.setHeader('Content-Type', 'application/json');
 
@@ -102,6 +104,11 @@
 	      res.send(answer);
 	    }
 	  });
+	});
+
+	app.post('/ml', function (req, res) {
+	  res.setHeader('Content-Type', 'application/json');
+	  res.send({ a: 'b' });
 	});
 
 	app.get('*', function (req, res) {
@@ -158,18 +165,14 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Account = __webpack_require__(11);
-
-	var _Account2 = _interopRequireDefault(_Account);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// modules/routes.js
 	module.exports = _react2.default.createElement(
 	  _reactRouter.Route,
 	  { path: '/', component: _App2.default },
-	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/my-account', component: _Account2.default })
-	); // modules/routes.js
+	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default })
+	);
 
 /***/ },
 /* 5 */
@@ -279,7 +282,7 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(_FacebookButton2.default, { fb: FB }),
-	        _react2.default.createElement(_SearchBar2.default, { placeholder: '50 grams of raw spinach and 1 cup of pineapple' })
+	        _react2.default.createElement(_SearchBar2.default, { fb: FB, placeholder: '50 grams of raw spinach and 1 cup of pineapple' })
 	      );
 	    }
 	  }]);
@@ -325,23 +328,44 @@
 
 	    var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
-	    _this.updateState = _this.updateState.bind(_this);
-	    _this.makePost = _this.makePost.bind(_this);
+	    _this.FB = props.fb;
 
+	    _this.updateState = _this.updateState.bind(_this);
+	    _this.getFoodInfo = _this.getFoodInfo.bind(_this);
 	    _this.state = { items: [] };
 	    return _this;
 	  }
 
 	  _createClass(SearchBar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var me = this;
+
+	      this.FB.getLoginStatus(function (response) {
+	        console.log('response below. searchbar here');
+	        console.log(response);
+
+	        me.setState({
+	          userId: response.authResponse.userId
+	        });
+	      });
+	    }
+	  }, {
 	    key: 'updateState',
 	    value: function updateState(response) {
 	      this.setState({ items: response.items });
 	    }
 	  }, {
-	    key: 'makePost',
-	    value: function makePost(callback) {
+	    key: 'getFoodInfo',
+	    value: function getFoodInfo(FB, callback) {
 	      var enteredStr = document.getElementById('searchText').value;
-	      var data = { 'search': enteredStr };
+	      var userId = this.state.userId;
+
+	      if (this.state.userId) {
+	        userId = this.state.userId;
+	      }
+
+	      var data = { 'search': enteredStr, 'userId': userId };
 
 	      $.ajax({
 	        url: 'http://localhost:8080/nutri',
@@ -372,7 +396,7 @@
 	        _react2.default.createElement(
 	          'button',
 	          { id: 'searchBtn', className: 'greenOut', onClick: function onClick() {
-	              return _this2.makePost(_this2.updateState);
+	              return _this2.getFoodInfo(_this2.FB, _this2.updateState);
 	            } },
 	          ' Search '
 	        ),
@@ -489,10 +513,6 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Mark = __webpack_require__(10);
-
-	var _Mark2 = _interopRequireDefault(_Mark);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -510,28 +530,37 @@
 	      var _this = _possibleConstructorReturn(this, (FacebookButton.__proto__ || Object.getPrototypeOf(FacebookButton)).call(this, props));
 
 	      _this.FB = props.fb;
-
-	      _this.FB.getLoginStatus(function (response) {
-	         console.log('Getting login status');
-	         console.log(response);
-	         this.state = {
-	            user: response
-	         };
-	      });
-
 	      return _this;
 	   }
 
 	   _createClass(FacebookButton, [{
+	      key: 'componentWillMount',
+	      value: function componentWillMount() {}
+	   }, {
 	      key: 'componentDidMount',
 	      value: function componentDidMount() {
 	         this.FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
+
 	         this.FB.Event.subscribe('auth.statusChange', this.onStatusChange.bind(this));
+
+	         this.FB.Event.subscribe('auth.login', this.onLogin.bind(this));
+
+	         this.FB.getLoginStatus(function (response) {
+	            this.state = {
+	               user: response
+	            };
+	         });
+	      }
+	   }, {
+	      key: 'onLogin',
+	      value: function onLogin(response) {
+	         console.log('onLogin');
 	      }
 	   }, {
 	      key: 'onStatusChange',
 	      value: function onStatusChange(response) {
 	         var self = this;
+	         console.log('Status change');
 
 	         if (response.status === "connected") {
 	            this.FB.api('/me', function (response) {
@@ -547,7 +576,7 @@
 	      key: 'onLogout',
 	      value: function onLogout(response) {
 	         this.setState({
-	            message: "Bye"
+	            user: null
 	         });
 	      }
 	   }, {
@@ -562,8 +591,7 @@
 	               'data-size': 'large',
 	               'data-show-faces': 'false',
 	               'data-auto-logout-link': 'true'
-	            }),
-	            _react2.default.createElement(_Mark2.default, { user: this.state })
+	            })
 	         );
 	      }
 	   }]);
@@ -576,106 +604,30 @@
 
 /***/ },
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	   value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Mark = function (_React$Component) {
-	   _inherits(Mark, _React$Component);
-
-	   function Mark(props) {
-	      _classCallCheck(this, Mark);
-
-	      var _this = _possibleConstructorReturn(this, (Mark.__proto__ || Object.getPrototypeOf(Mark)).call(this, props));
-
-	      _this.state = { user: props.user };
-	      return _this;
-	   }
-
-	   _createClass(Mark, [{
-	      key: 'render',
-	      value: function render() {
-	         return _react2.default.createElement('div', null);
-	      }
-	   }]);
-
-	   return Mark;
-	}(_react2.default.Component);
-
-	exports.default = Mark;
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	module.exports = _react2.default.createClass({
-	   displayName: 'exports',
-
-	   render: function render() {
-	      return _react2.default.createElement(
-	         'div',
-	         null,
-	         _react2.default.createElement(
-	            'p',
-	            null,
-	            ' My Account '
-	         )
-	      );
-	   }
-	}); // modules/Account.js
-
-/***/ },
-/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = require("body-parser");
 
 /***/ },
-/* 13 */
+/* 11 */
 /***/ function(module, exports) {
 
 	module.exports = require("compression");
 
 /***/ },
-/* 14 */
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = require("express");
 
 /***/ },
-/* 15 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = require("serve-favicon");
 
 /***/ },
-/* 16 */
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -714,13 +666,13 @@
 	};
 
 /***/ },
-/* 17 */
+/* 15 */
 /***/ function(module, exports) {
 
 	module.exports = require("https");
 
 /***/ },
-/* 18 */
+/* 16 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -733,7 +685,7 @@
 	};
 
 /***/ },
-/* 19 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -765,19 +717,76 @@
 	};
 
 /***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = {
+	  run: function run(userId, searchStr) {
+	    var marklogic = __webpack_require__(19);
+	    var my = __webpack_require__(20);
+	    var db = marklogic.createDatabaseClient(my.connInfo);
+	    var qb = marklogic.queryBuilder;
+
+	    console.log('user ' + userId + ' searched for ' + searchStr);
+
+	    var writeUser = function writeUser(userId) {
+
+	      db.documents.write({ uri: '/user/example.json',
+	        contentType: 'application/json',
+	        content: { some: 'data' }
+	      }).result(null, function (error) {
+	        console.log(JSON.stringify(error));
+	      });
+
+	      db.documents.read('/user/example.json').result(function (documents) {
+	        documents.forEach(function (document) {
+	          console.log(JSON.stringify(document));
+	        });
+	      }, function (error) {
+	        console.log(JSON.stringify(error, null, 2));
+	      });
+	    };
+	  }
+
+	};
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	module.exports = require("marklogic");
+
+/***/ },
 /* 20 */
 /***/ function(module, exports) {
 
-	module.exports = require("path");
+	'use strict';
+
+	module.exports = {
+	  connInfo: {
+	    host: 'localhost',
+	    port: 8000,
+	    user: 'admin',
+	    password: 'admin'
+	  }
+	};
 
 /***/ },
 /* 21 */
 /***/ function(module, exports) {
 
-	module.exports = require("pem");
+	module.exports = require("path");
 
 /***/ },
 /* 22 */
+/***/ function(module, exports) {
+
+	module.exports = require("pem");
+
+/***/ },
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = require("request");

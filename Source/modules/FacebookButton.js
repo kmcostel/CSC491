@@ -1,31 +1,38 @@
 import React from 'react';
-import Mark from './Mark.js';
 
 export default class FacebookButton extends React.Component {
    constructor(props) {
       super(props);
 
       this.FB = props.fb;
-
-      this.FB.getLoginStatus(function(response) {
-         console.log('Getting login status');
-         console.log(response);
-         this.state = {
-            user: response   
-         }
-      });
-
    }
+
+   componentWillMount() { }
 
    componentDidMount() {
       this.FB.Event.subscribe('auth.logout', 
          this.onLogout.bind(this));
+
       this.FB.Event.subscribe('auth.statusChange', 
          this.onStatusChange.bind(this));
+
+      this.FB.Event.subscribe('auth.login', 
+         this.onLogin.bind(this));
+      
+      this.FB.getLoginStatus(function(response) {
+         this.state = {
+            user: response   
+         }
+      });
+   }
+
+   onLogin(response) {
+      console.log('onLogin');
    }
       
    onStatusChange(response) {
       var self = this;
+      console.log('Status change');
 
       if( response.status === "connected" ) {
          this.FB.api('/me', function(response) {
@@ -39,9 +46,9 @@ export default class FacebookButton extends React.Component {
    }
 
    onLogout(response) {
-      /*this.setState({
-         message: "Bye"
-      });*/
+      this.setState({
+         user: null
+      });
    }
 
    render() {
@@ -55,7 +62,6 @@ export default class FacebookButton extends React.Component {
                data-auto-logout-link="true"
                >
             </div>
-            <Mark user={this.state} />
          </div>
       );
    }
