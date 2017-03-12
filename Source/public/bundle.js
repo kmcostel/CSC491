@@ -25594,10 +25594,10 @@
 	    var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
 	    _this.FB = props.fb;
-
 	    _this.updateState = _this.updateState.bind(_this);
 	    _this.getFoodInfo = _this.getFoodInfo.bind(_this);
-	    _this.state = { items: [] };
+	    _this.componentDidMount = _this.componentDidMount.bind(_this);
+	    _this.state = { items: [], userId: null };
 	    return _this;
 	  }
 
@@ -25607,29 +25607,23 @@
 	      var me = this;
 
 	      this.FB.getLoginStatus(function (response) {
-	        console.log('response below. searchbar here');
-	        console.log(response);
-
 	        me.setState({
-	          userId: response.authResponse.userId
+	          userId: response.authResponse.userID
 	        });
 	      });
 	    }
 	  }, {
 	    key: 'updateState',
 	    value: function updateState(response) {
-	      this.setState({ items: response.items });
+	      this.setState({
+	        items: response.items
+	      });
 	    }
 	  }, {
 	    key: 'getFoodInfo',
 	    value: function getFoodInfo(FB, callback) {
 	      var enteredStr = document.getElementById('searchText').value;
 	      var userId = this.state.userId;
-
-	      if (this.state.userId) {
-	        userId = this.state.userId;
-	      }
-
 	      var data = { 'search': enteredStr, 'userId': userId };
 
 	      $.ajax({

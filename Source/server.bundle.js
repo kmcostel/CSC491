@@ -90,8 +90,11 @@
 
 	// Endpoint for POST calls
 	app.post('/nutri', function (req, res) {
+	  // Save user's search in their history
+	  if (req.body.userId != null) {
+	    ml.update(req.body.userId, req.body.search);
+	  }
 	  var options = makeOptions.generate(req.body.search, keys.key.appKey, keys.key.appId);
-	  console.log(req.body.userId);
 	  var answer = {};
 	  res.setHeader('Content-Type', 'application/json');
 
@@ -104,11 +107,6 @@
 	      res.send(answer);
 	    }
 	  });
-	});
-
-	app.post('/ml', function (req, res) {
-	  res.setHeader('Content-Type', 'application/json');
-	  res.send({ a: 'b' });
 	});
 
 	app.get('*', function (req, res) {
@@ -329,10 +327,10 @@
 	    var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
 	    _this.FB = props.fb;
-
 	    _this.updateState = _this.updateState.bind(_this);
 	    _this.getFoodInfo = _this.getFoodInfo.bind(_this);
-	    _this.state = { items: [] };
+	    _this.componentDidMount = _this.componentDidMount.bind(_this);
+	    _this.state = { items: [], userId: null };
 	    return _this;
 	  }
 
@@ -342,29 +340,23 @@
 	      var me = this;
 
 	      this.FB.getLoginStatus(function (response) {
-	        console.log('response below. searchbar here');
-	        console.log(response);
-
 	        me.setState({
-	          userId: response.authResponse.userId
+	          userId: response.authResponse.userID
 	        });
 	      });
 	    }
 	  }, {
 	    key: 'updateState',
 	    value: function updateState(response) {
-	      this.setState({ items: response.items });
+	      this.setState({
+	        items: response.items
+	      });
 	    }
 	  }, {
 	    key: 'getFoodInfo',
 	    value: function getFoodInfo(FB, callback) {
 	      var enteredStr = document.getElementById('searchText').value;
 	      var userId = this.state.userId;
-
-	      if (this.state.userId) {
-	        userId = this.state.userId;
-	      }
-
 	      var data = { 'search': enteredStr, 'userId': userId };
 
 	      $.ajax({
@@ -722,34 +714,39 @@
 
 	'use strict';
 
+	// public/js/ml.js
+
 	module.exports = {
-	  run: function run(userId, searchStr) {
+	  update: function update(userId, searchStr) {
 	    var marklogic = __webpack_require__(19);
 	    var my = __webpack_require__(20);
 	    var db = marklogic.createDatabaseClient(my.connInfo);
 	    var qb = marklogic.queryBuilder;
+	    var pb = marklogic.patchBuilder;
 
-	    console.log('user ' + userId + ' searched for ' + searchStr);
+	    db.documents.read('/user/' + userId + '.json').result(function (documents) {
+	      // Use documents.write() if a user doesn't exist in the database.
+	      // Otherwise use the documents.patch() function to update their search history
+	      if (documents.length == 0) writeUser();else updateUser();
+	    }, function (error) {
+	      console.log(JSON.stringify(error, null, 2));
+	    });
 
-	    var writeUser = function writeUser(userId) {
-
-	      db.documents.write({ uri: '/user/example.json',
+	    var writeUser = function writeUser() {
+	      db.documents.write({ uri: '/user/' + userId + '.json',
 	        contentType: 'application/json',
-	        content: { some: 'data' }
+	        content: { searches: [searchStr] }
 	      }).result(null, function (error) {
 	        console.log(JSON.stringify(error));
 	      });
+	    };
 
-	      db.documents.read('/user/example.json').result(function (documents) {
-	        documents.forEach(function (document) {
-	          console.log(JSON.stringify(document));
-	        });
-	      }, function (error) {
-	        console.log(JSON.stringify(error, null, 2));
-	      });
+	    // Insert the search string into the user's search history using patch operation
+	    // Patch operation can update a document in the database
+	    var updateUser = function updateUser() {
+	      db.documents.patch('/user/' + userId + '.json', pb.insert('/array-node("searches")', 'last-child', searchStr));
 	    };
 	  }
-
 	};
 
 /***/ },

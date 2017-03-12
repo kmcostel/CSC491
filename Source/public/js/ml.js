@@ -1,35 +1,41 @@
+// public/js/ml.js
 
 module.exports = {
-  run: function(userId, searchStr) {
+  update: function(userId, searchStr) {
     var marklogic = require('marklogic');
     var my = require('./my-connection.js');
     var db = marklogic.createDatabaseClient(my.connInfo);
     var qb = marklogic.queryBuilder;
-  
-    console.log('user ' + userId + ' searched for ' + searchStr);
+    var pb = marklogic.patchBuilder;
 
-    var writeUser = function(userId) {
+    db.documents.read('/user/' + userId + '.json')
+     .result( function(documents) {
+      // Use documents.write() if a user doesn't exist in the database.
+      // Otherwise use the documents.patch() function to update their search history
+        if (documents.length == 0) writeUser();
+        else updateUser();
+      }, function(error) {
+        console.log(JSON.stringify(error, null, 2));
+      });
 
+    var writeUser = function() {
       db.documents.write(
-        { uri: '/user/example.json',
+        { uri: '/user/' + userId + '.json',
           contentType: 'application/json',
-          content: { some: 'data' }
+          content: { searches: [searchStr] }
         }
       ).result(null, function(error) {
           console.log(JSON.stringify(error));
-        });
-  
-      db.documents.read('/user/example.json')
-       .result( function(documents) {
-          documents.forEach(function(document) {
-            console.log(JSON.stringify(document));
-          });
-        }, function(error) {
-          console.log(JSON.stringify(error, null, 2));
-        });
+      });
+    }
 
+    // Insert the search string into the user's search history using patch operation
+    // Patch operation can update a document in the database
+    var updateUser = function() {
+      db.documents.patch('/user/' + userId + '.json',
+        pb.insert('/array-node("searches")' , 'last-child', searchStr)
+      );
     }
 
   }
-
 };

@@ -5,38 +5,31 @@ export default class SearchBar extends React.Component {
   constructor(props) {
     super(props);
     this.FB = props.fb;
-
     this.updateState = this.updateState.bind(this);
     this.getFoodInfo = this.getFoodInfo.bind(this);
-    this.state = {items: []};
+    this.componentDidMount = this.componentDidMount.bind(this);
+    this.state = {items: [], userId: null};
+  }
+  
+  componentDidMount() {
+    var me = this;
+
+    this.FB.getLoginStatus(function(response) {
+      me.setState({
+        userId: response.authResponse.userID
+      });
+    });
   }
 
-   componentDidMount() {
-     var me = this;
-
-     this.FB.getLoginStatus(function(response) {
-       console.log('response below. searchbar here');
-       console.log(response);
-
-       me.setState({
-         userId: response.authResponse.userId   
-       })
-
-     });
-   }
-
   updateState(response) {
-    this.setState({items: response.items});
+    this.setState({
+      items: response.items
+    });
   }
  
   getFoodInfo(FB, callback) {
     var enteredStr = document.getElementById('searchText').value;
     var userId = this.state.userId;  
-
-    if (this.state.userId) {
-      userId = this.state.userId;
-    }
-      
     var data = {'search' : enteredStr, 'userId' : userId};
 
     $.ajax({
