@@ -34,24 +34,24 @@ app.use(favicon('public/images/donut.ico'));
 
 // Endpoint for POST calls
 app.post('/nutri', (req, res) => {
-  // Save user's search in their history
-  if (req.body.userId != null) {
-    ml.update(req.body.userId, req.body.search);
-  }
-  var options = makeOptions.generate(req.body.search, keys.key.appKey, keys.key.appId);
-  var answer = {};
-  res.setHeader('Content-Type', 'application/json');
+// Save user's search in their history
+   if (req.body.userId != null) {
+      ml.update(req.body.userId, req.body.search);
+   }
+   var options = makeOptions.generate(req.body.search, keys.key.appKey, keys.key.appId);
+   var answer = {};
+   res.setHeader('Content-Type', 'application/json');
 
-    request(options, function(error, response, body) {
+   request(options, function(error, response, body) {
       if (error === null) {
-        answer = fillResponse.getResult(body);
-        res.send(answer);
+         answer = fillResponse.getResult(body);
+         res.send(answer);
       }
       else {
-        answer.error = error;
-        res.send(answer);
+         answer.error = error;
+         res.send(answer);
       }
-    });
+   });
 });
 
 app.get('*', (req, res) => {
@@ -68,4 +68,3 @@ var PORT = process.env.PORT || 8080
 
 app.listen(PORT);
 console.log('Listening on port ' + PORT);
-

@@ -1,3 +1,4 @@
+//modules/FacebookButton.js
 import React from 'react';
 
 export default class FacebookButton extends React.Component {
@@ -26,18 +27,15 @@ export default class FacebookButton extends React.Component {
       });
    }
 
-   onLogin(response) {
-      console.log('onLogin');
+   onLogin(response) { 
+      this.setState({user: response});
    }
       
    onStatusChange(response) {
       var self = this;
-      console.log('Status change');
 
-      if( response.status === "connected" ) {
+      if(response.status === "connected") {
          this.FB.api('/me', function(response) {
-            console.log('Logging response');
-            console.log( response );
             self.setState({
                user: response
             });
