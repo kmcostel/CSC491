@@ -5,21 +5,9 @@ import Results from './Results.js'
 export default class SearchBar extends React.Component {
    constructor(props) {
       super(props);
-      this.FB = props.fb;
       this.updateState = this.updateState.bind(this);
       this.getFoodInfo = this.getFoodInfo.bind(this);
-      this.componentDidMount = this.componentDidMount.bind(this);
-      this.state = {items: [], userId: null};
-   }
-
-   componentDidMount() {
-      var me = this;
-
-      this.FB.getLoginStatus(function(response) {
-         me.setState({
-            userId: response.authResponse.userID
-         });
-      });
+      this.state = {items: [], user: props.user};
    }
 
    updateState(response) {
@@ -28,10 +16,14 @@ export default class SearchBar extends React.Component {
       });
    }
 
-   getFoodInfo(FB, callback) {
+   componentWillReceiveProps(nextProps) {
+      this.setState({ user: nextProps.user });  
+   }
+
+   getFoodInfo(callback) {
       var enteredStr = document.getElementById('searchText').value;
-      var userId = this.state.userId;  
-      var data = {'search' : enteredStr, 'userId' : userId};
+      
+      var data = {search : enteredStr, user : this.state.user};
 
       $.ajax({
          url: 'http://localhost:8080/nutri',
@@ -40,7 +32,7 @@ export default class SearchBar extends React.Component {
          contentType: 'application/json; charset=utf-8',
          dataType: 'json',
          success: function(response){
-         callback(response);
+            callback(response);
          }
       }); 
    }
@@ -50,7 +42,7 @@ export default class SearchBar extends React.Component {
          <div id='searchDiv'>
             <p> What are you eating? </p>
             <textarea id='searchText' placeholder={this.props.placeholder} cols='80' rows='1'/> &nbsp;
-            <button id='searchBtn' className='greenOut' onClick={() => this.getFoodInfo(this.FB, this.updateState)}> Search </button>
+            <button id='searchBtn' className='greenOut' onClick={() => this.getFoodInfo(this.updateState)}> Search </button>
             <Results items={this.state.items} />
          </div>
       );

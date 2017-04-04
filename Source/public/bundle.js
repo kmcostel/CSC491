@@ -25434,9 +25434,9 @@
 
 	// modules/routes.js
 	module.exports = _react2.default.createElement(
-	  _reactRouter.Route,
-	  { path: '/', component: _App2.default },
-	  _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default })
+	   _reactRouter.Route,
+	   { path: '/', component: _App2.default },
+	   _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default })
 	);
 
 /***/ },
@@ -25446,7 +25446,7 @@
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	   value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25465,35 +25465,35 @@
 
 
 	var App = function (_React$Component) {
-	  _inherits(App, _React$Component);
+	   _inherits(App, _React$Component);
 
-	  function App() {
-	    _classCallCheck(this, App);
+	   function App() {
+	      _classCallCheck(this, App);
 
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
-	  }
+	      return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+	   }
 
-	  _createClass(App, [{
-	    key: "render",
-	    value: function render() {
-	      return _react2.default.createElement(
-	        "div",
-	        null,
-	        _react2.default.createElement(
-	          "h1",
-	          null,
-	          _react2.default.createElement(
-	            "a",
-	            { href: "/" },
-	            " Carb Counter"
-	          )
-	        ),
-	        this.props.children
-	      );
-	    }
-	  }]);
+	   _createClass(App, [{
+	      key: "render",
+	      value: function render() {
+	         return _react2.default.createElement(
+	            "div",
+	            null,
+	            _react2.default.createElement(
+	               "h1",
+	               null,
+	               _react2.default.createElement(
+	                  "a",
+	                  { href: "/" },
+	                  " Carb Counter"
+	               )
+	            ),
+	            this.props.children
+	         );
+	      }
+	   }]);
 
-	  return App;
+	   return App;
 	}(_react2.default.Component);
 
 	exports.default = App;
@@ -25505,7 +25505,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	   value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25532,27 +25532,26 @@
 
 
 	var Home = function (_React$Component) {
-	  _inherits(Home, _React$Component);
+	   _inherits(Home, _React$Component);
 
-	  function Home() {
-	    _classCallCheck(this, Home);
+	   function Home() {
+	      _classCallCheck(this, Home);
 
-	    return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).apply(this, arguments));
-	  }
+	      return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).apply(this, arguments));
+	   }
 
-	  _createClass(Home, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(_FacebookButton2.default, { fb: FB }),
-	        _react2.default.createElement(_SearchBar2.default, { fb: FB, placeholder: '50 grams of raw spinach and 1 cup of pineapple' })
-	      );
-	    }
-	  }]);
+	   _createClass(Home, [{
+	      key: 'render',
+	      value: function render() {
+	         return _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(_FacebookButton2.default, { fb: window.FB })
+	         );
+	      }
+	   }]);
 
-	  return Home;
+	   return Home;
 	}(_react2.default.Component);
 
 	exports.default = Home;
@@ -25564,7 +25563,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	   value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -25583,88 +25582,81 @@
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //modules/SearchBar.js
+
 
 	var SearchBar = function (_React$Component) {
-	  _inherits(SearchBar, _React$Component);
+	   _inherits(SearchBar, _React$Component);
 
-	  function SearchBar(props) {
-	    _classCallCheck(this, SearchBar);
+	   function SearchBar(props) {
+	      _classCallCheck(this, SearchBar);
 
-	    var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
+	      var _this = _possibleConstructorReturn(this, (SearchBar.__proto__ || Object.getPrototypeOf(SearchBar)).call(this, props));
 
-	    _this.FB = props.fb;
-	    _this.updateState = _this.updateState.bind(_this);
-	    _this.getFoodInfo = _this.getFoodInfo.bind(_this);
-	    _this.componentDidMount = _this.componentDidMount.bind(_this);
-	    _this.state = { items: [], userId: null };
-	    return _this;
-	  }
+	      _this.updateState = _this.updateState.bind(_this);
+	      _this.getFoodInfo = _this.getFoodInfo.bind(_this);
+	      _this.state = { items: [], user: props.user };
+	      return _this;
+	   }
 
-	  _createClass(SearchBar, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      var me = this;
+	   _createClass(SearchBar, [{
+	      key: 'updateState',
+	      value: function updateState(response) {
+	         this.setState({
+	            items: response.items
+	         });
+	      }
+	   }, {
+	      key: 'componentWillReceiveProps',
+	      value: function componentWillReceiveProps(nextProps) {
+	         this.setState({ user: nextProps.user });
+	      }
+	   }, {
+	      key: 'getFoodInfo',
+	      value: function getFoodInfo(callback) {
+	         var enteredStr = document.getElementById('searchText').value;
 
-	      this.FB.getLoginStatus(function (response) {
-	        me.setState({
-	          userId: response.authResponse.userID
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'updateState',
-	    value: function updateState(response) {
-	      this.setState({
-	        items: response.items
-	      });
-	    }
-	  }, {
-	    key: 'getFoodInfo',
-	    value: function getFoodInfo(FB, callback) {
-	      var enteredStr = document.getElementById('searchText').value;
-	      var userId = this.state.userId;
-	      var data = { 'search': enteredStr, 'userId': userId };
+	         var data = { search: enteredStr, user: this.state.user };
 
-	      $.ajax({
-	        url: 'http://localhost:8080/nutri',
-	        type: 'POST',
-	        data: JSON.stringify(data),
-	        contentType: 'application/json; charset=utf-8',
-	        dataType: 'json',
-	        success: function success(response) {
-	          callback(response);
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
+	         $.ajax({
+	            url: 'http://localhost:8080/nutri',
+	            type: 'POST',
+	            data: JSON.stringify(data),
+	            contentType: 'application/json; charset=utf-8',
+	            dataType: 'json',
+	            success: function success(response) {
+	               callback(response);
+	            }
+	         });
+	      }
+	   }, {
+	      key: 'render',
+	      value: function render() {
+	         var _this2 = this;
 
-	      return _react2.default.createElement(
-	        'div',
-	        { id: 'searchDiv' },
-	        _react2.default.createElement(
-	          'p',
-	          null,
-	          ' What are you eating? '
-	        ),
-	        _react2.default.createElement('textarea', { id: 'searchText', placeholder: this.props.placeholder, cols: '80', rows: '1' }),
-	        ' \xA0',
-	        _react2.default.createElement(
-	          'button',
-	          { id: 'searchBtn', className: 'greenOut', onClick: function onClick() {
-	              return _this2.getFoodInfo(_this2.FB, _this2.updateState);
-	            } },
-	          ' Search '
-	        ),
-	        _react2.default.createElement(_Results2.default, { items: this.state.items })
-	      );
-	    }
-	  }]);
+	         return _react2.default.createElement(
+	            'div',
+	            { id: 'searchDiv' },
+	            _react2.default.createElement(
+	               'p',
+	               null,
+	               ' What are you eating? '
+	            ),
+	            _react2.default.createElement('textarea', { id: 'searchText', placeholder: this.props.placeholder, cols: '80', rows: '1' }),
+	            ' \xA0',
+	            _react2.default.createElement(
+	               'button',
+	               { id: 'searchBtn', className: 'greenOut', onClick: function onClick() {
+	                     return _this2.getFoodInfo(_this2.updateState);
+	                  } },
+	               ' Search '
+	            ),
+	            _react2.default.createElement(_Results2.default, { items: this.state.items })
+	         );
+	      }
+	   }]);
 
-	  return SearchBar;
+	   return SearchBar;
 	}(_react2.default.Component);
 
 	exports.default = SearchBar;
@@ -25772,13 +25764,18 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _SearchBar = __webpack_require__(225);
+
+	var _SearchBar2 = _interopRequireDefault(_SearchBar);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //modules/FacebookButton.js
+
 
 	var FacebookButton = function (_React$Component) {
 	   _inherits(FacebookButton, _React$Component);
@@ -25788,47 +25785,89 @@
 
 	      var _this = _possibleConstructorReturn(this, (FacebookButton.__proto__ || Object.getPrototypeOf(FacebookButton)).call(this, props));
 
-	      _this.FB = props.fb;
+	      _this.componentDidMount = _this.componentDidMount.bind(_this);
+	      _this.testAPI = _this.testAPI.bind(_this);
+	      _this.state = { user: null };
 	      return _this;
 	   }
 
 	   _createClass(FacebookButton, [{
-	      key: 'componentWillMount',
-	      value: function componentWillMount() {}
-	   }, {
 	      key: 'componentDidMount',
 	      value: function componentDidMount() {
-	         this.FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
+	         window.fbAsyncInit = function () {
+	            FB.init({
+	               appId: '375078696202555',
+	               cookie: true,
+	               xfbml: true,
+	               version: 'v2.8'
+	            });
 
-	         this.FB.Event.subscribe('auth.statusChange', this.onStatusChange.bind(this));
+	            FB.getLoginStatus(function (response) {
+	               FB.Event.subscribe('auth.login', this.onLogin.bind(this));
+	               FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
+	               this.statusChangeCallback(response);
+	            }.bind(this));
+	         }.bind(this);
 
-	         this.FB.Event.subscribe('auth.login', this.onLogin.bind(this));
+	         // Load the SDK asynchronously
+	         (function (d, s, id) {
+	            var js,
+	                fjs = d.getElementsByTagName(s)[0];
+	            if (d.getElementById(id)) return;
+	            js = d.createElement(s);js.id = id;
+	            js.src = "//connect.facebook.net/en_US/sdk.js";
+	            fjs.parentNode.insertBefore(js, fjs);
+	         })(document, 'script', 'facebook-jssdk');
+	      }
 
-	         this.FB.getLoginStatus(function (response) {
-	            this.state = {
-	               user: response
-	            };
+	      // Here we run a very simple test of the Graph API after login is
+	      // successful.  See statusChangeCallback() for when this call is made.
+
+	   }, {
+	      key: 'testAPI',
+	      value: function testAPI() {
+	         var self = this;
+	         FB.api('/me', function (response) {
+	            self.setState({ user: response.id });
 	         });
+	      }
+
+	      // This is called with the results from FB.getLoginStatus().
+
+	   }, {
+	      key: 'statusChangeCallback',
+	      value: function statusChangeCallback(response) {
+	         if (response.status === 'connected') {
+	            this.testAPI();
+	         } else if (response.status === 'not_authorized') {
+	            // The person is logged into Facebook, but not your app.
+	         } else {
+	               // The person is not logged into Facebook, so we're not sure if
+	               // they are logged into this app or not.
+	            }
+	      }
+
+	      // This function is called when someone finishes with the Login
+	      // Button.  See the onlogin handler attached to it in the sample
+	      // code below.
+
+	   }, {
+	      key: 'checkLoginState',
+	      value: function checkLoginState() {
+	         FB.getLoginStatus(function (response) {
+	            this.statusChangeCallback(response);
+	         }.bind(this));
+	      }
+	   }, {
+	      key: 'handleClick',
+	      value: function handleClick() {
+	         FB.login(checkLoginState());
 	      }
 	   }, {
 	      key: 'onLogin',
 	      value: function onLogin(response) {
-	         console.log('onLogin');
-	      }
-	   }, {
-	      key: 'onStatusChange',
-	      value: function onStatusChange(response) {
-	         var self = this;
-	         console.log('Status change');
-
-	         if (response.status === "connected") {
-	            this.FB.api('/me', function (response) {
-	               console.log('Logging response');
-	               console.log(response);
-	               self.setState({
-	                  user: response
-	               });
-	            });
+	         if (response.status === 'connected') {
+	            this.setState({ user: response.authResponse.userID });
 	         }
 	      }
 	   }, {
@@ -25843,14 +25882,19 @@
 	      value: function render() {
 	         return _react2.default.createElement(
 	            'div',
-	            { className: 'topCorner' },
-	            _react2.default.createElement('div', {
-	               className: 'fb-login-button',
-	               'data-max-rows': '1',
-	               'data-size': 'large',
-	               'data-show-faces': 'false',
-	               'data-auto-logout-link': 'true'
-	            })
+	            null,
+	            _react2.default.createElement(
+	               'div',
+	               { className: 'topCorner' },
+	               _react2.default.createElement('div', {
+	                  className: 'fb-login-button',
+	                  'data-max-rows': '1',
+	                  'data-size': 'large',
+	                  'data-show-faces': 'false',
+	                  'data-auto-logout-link': 'true'
+	               })
+	            ),
+	            _react2.default.createElement(_SearchBar2.default, { user: this.state.user, placeholder: '50 grams of raw spinach and 1 cup of pineapple' })
 	         );
 	      }
 	   }]);

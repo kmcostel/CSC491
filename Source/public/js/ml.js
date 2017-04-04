@@ -7,6 +7,7 @@ module.exports = {
       var qb = marklogic.queryBuilder;
       var pb = marklogic.patchBuilder;
 
+      console.log('Updating user ' + userId + ' with ' + searchStr);
       db.documents.read('/user/' + userId + '.json')
          .result( function(documents) {
          // Use documents.write() if a user doesn't exist in the database.

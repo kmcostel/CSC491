@@ -35,8 +35,8 @@ app.use(favicon('public/images/donut.ico'));
 // Endpoint for POST calls
 app.post('/nutri', (req, res) => {
 // Save user's search in their history
-   if (req.body.userId != null) {
-      ml.update(req.body.userId, req.body.search);
+   if (req.body.user != null) {
+      ml.update(req.body.user, req.body.search);
    }
    var options = makeOptions.generate(req.body.search, keys.key.appKey, keys.key.appId);
    var answer = {};
