@@ -1,6 +1,7 @@
 body {
   padding: 60px;
   font: 25px "Lucida Grande", Helvetica, Arial;
+  width: 100%;
 }
 
 textarea {
@@ -20,6 +21,7 @@ a {
 #searchBtn {
   position: absolute;
 }
+
 #searchDiv {
   display: inline-block;
   position: relative;

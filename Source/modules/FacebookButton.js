@@ -35,6 +35,8 @@ export default class FacebookButton extends React.Component {
          js.src = "//connect.facebook.net/en_US/sdk.js";
          fjs.parentNode.insertBefore(js, fjs);
       }(document, 'script', 'facebook-jssdk'));
+
+
    }
 
    // Here we run a very simple test of the Graph API after login is
@@ -85,18 +87,18 @@ export default class FacebookButton extends React.Component {
 
    render() {
       return (
-         <div>
-         <div className="topCorner">
-            <div 
-               className="fb-login-button" 
-               data-max-rows="1" 
-               data-size="large" 
-               data-show-faces="false" 
-               data-auto-logout-link="true"
-               >
+         <div height="1500">
+            <div className="topCorner">
+               <div 
+                  className="fb-login-button" 
+                  data-max-rows="1" 
+                  data-size="large" 
+                  data-show-faces="false" 
+                  data-auto-logout-link="true"
+                  >
+               </div>
             </div>
-         </div>
-         <SearchBar user={this.state.user} placeholder='50 grams of raw spinach and 1 cup of pineapple' />          
+            <SearchBar user={this.state.user} placeholder='50 grams of raw spinach and 1 cup of pineapple' />          
         </div>
       );
    }

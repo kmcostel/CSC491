@@ -61,18 +61,18 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Use these to match the url to routes and then render
-	var bodyParser = __webpack_require__(10);
-	var compression = __webpack_require__(11);
-	var express = __webpack_require__(12);
-	var favicon = __webpack_require__(13);
-	var fillResponse = __webpack_require__(14);
-	var https = __webpack_require__(15);
-	var keys = __webpack_require__(16);
-	var makeOptions = __webpack_require__(17);
-	var ml = __webpack_require__(18); // MarkLogic module
-	var path = __webpack_require__(21);
-	var pem = __webpack_require__(22);
-	var request = __webpack_require__(23);
+	var bodyParser = __webpack_require__(11);
+	var compression = __webpack_require__(12);
+	var express = __webpack_require__(13);
+	var favicon = __webpack_require__(14);
+	var fillResponse = __webpack_require__(15);
+	var https = __webpack_require__(16);
+	var keys = __webpack_require__(17);
+	var makeOptions = __webpack_require__(18);
+	var ml = __webpack_require__(19); // MarkLogic module
+	var path = __webpack_require__(22);
+	var pem = __webpack_require__(23);
+	var request = __webpack_require__(24);
 
 	var app = express();
 
@@ -251,7 +251,7 @@
 
 	var _SearchBar2 = _interopRequireDefault(_SearchBar);
 
-	var _FacebookButton = __webpack_require__(9);
+	var _FacebookButton = __webpack_require__(10);
 
 	var _FacebookButton2 = _interopRequireDefault(_FacebookButton);
 
@@ -398,7 +398,7 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -419,6 +419,8 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Results.js
 
 
+	var BarChart = __webpack_require__(9).Bar;
+
 	var Results = function (_React$Component) {
 	  _inherits(Results, _React$Component);
 
@@ -429,49 +431,86 @@
 	  }
 
 	  _createClass(Results, [{
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
+	      var foodList = [];
 	      var foods = this.props.items.map(function (food, i) {
+	        var thisFood = [];
+	        thisFood.push(food.carbs);
+	        thisFood.push(food.fat);
+	        thisFood.push(food.sugar);
+	        foodList.push(thisFood);
+
 	        return _react2.default.createElement(
-	          'div',
+	          "div",
 	          { key: i },
 	          _react2.default.createElement(
-	            'p',
+	            "p",
 	            null,
-	            ' ',
+	            " ",
 	            food.grams,
-	            ' grams of ',
+	            " grams of ",
 	            food.name,
-	            ' '
+	            " "
 	          ),
 	          _react2.default.createElement(
-	            'p',
+	            "p",
 	            null,
-	            ' Fat = ',
+	            " Fat = ",
 	            food.fat,
-	            ' grams '
+	            " grams "
 	          ),
 	          _react2.default.createElement(
-	            'p',
+	            "p",
 	            null,
-	            ' Carbs = ',
+	            " Carbs = ",
 	            food.carbs,
-	            ' grams '
+	            " grams "
 	          ),
 	          _react2.default.createElement(
-	            'p',
+	            "p",
 	            null,
-	            ' Sugar = ',
+	            " Sugar = ",
 	            food.sugar,
-	            ' grams '
+	            " grams "
 	          )
 	        );
 	      });
 
+	      var chartData = {
+	        labels: ["Carbs", "Fats", "Sugar"],
+	        datasets: [{
+	          label: "Recommended daily value",
+	          fillColor: "#000000",
+	          strokeColor: "#000000",
+	          pointColor: "rgba(220,220,220,1)",
+	          pointStrokeColor: "#fff",
+	          pointHighlightFill: "#fff",
+	          pointHighlightStroke: "rgba(220,220,220,1)",
+	          data: [200, 80, 35]
+	        }, {
+	          label: "This search's values",
+	          fillColor: "#bfbfbf",
+	          strokeColor: "#3ae64b",
+	          pointColor: "rgba(151,187,205,1)",
+	          pointStrokeColor: "#fff",
+	          pointHighlightFill: "#fff",
+	          pointHighlightStroke: "rgba(151,187,205,1)",
+	          data: foodList[0]
+	        }]
+	      };
+
+	      var chartOptions = {};
+	      var barChart = null;
+	      if (this.props.items.length > 0) {
+	        barChart = _react2.default.createElement(BarChart, { data: chartData, options: chartOptions, width: "380", height: "275" });
+	      }
+
 	      return _react2.default.createElement(
-	        'div',
-	        { id: 'lineContainer' },
-	        foods
+	        "div",
+	        null,
+	        foods,
+	        barChart
 	      );
 	    }
 	  }]);
@@ -483,6 +522,12 @@
 
 /***/ },
 /* 9 */
+/***/ function(module, exports) {
+
+	module.exports = require("react-chartjs");
+
+/***/ },
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -615,7 +660,7 @@
 	      value: function render() {
 	         return _react2.default.createElement(
 	            'div',
-	            null,
+	            { height: '1500' },
 	            _react2.default.createElement(
 	               'div',
 	               { className: 'topCorner' },
@@ -639,31 +684,31 @@
 	;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 	module.exports = require("body-parser");
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = require("compression");
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	module.exports = require("express");
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 	module.exports = require("serve-favicon");
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -702,13 +747,13 @@
 	};
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	module.exports = require("https");
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -721,7 +766,7 @@
 	};
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -754,7 +799,7 @@
 	};
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -762,8 +807,8 @@
 	// public/js/ml.js
 	module.exports = {
 	   update: function update(userId, searchStr) {
-	      var marklogic = __webpack_require__(19);
-	      var my = __webpack_require__(20);
+	      var marklogic = __webpack_require__(20);
+	      var my = __webpack_require__(21);
 	      var db = marklogic.createDatabaseClient(my.connInfo);
 	      var qb = marklogic.queryBuilder;
 	      var pb = marklogic.patchBuilder;
@@ -795,13 +840,13 @@
 	};
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = require("marklogic");
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -816,19 +861,19 @@
 	};
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	module.exports = require("path");
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 	module.exports = require("pem");
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	module.exports = require("request");
