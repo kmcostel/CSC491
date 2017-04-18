@@ -87,7 +87,7 @@ export default class FacebookButton extends React.Component {
 
    render() {
       return (
-         <div height="1500">
+         <div>
             <div className="topCorner">
                <div 
                   className="fb-login-button" 

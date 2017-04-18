@@ -1,7 +1,6 @@
 body {
   padding: 60px;
   font: 25px "Lucida Grande", Helvetica, Arial;
-  width: 100%;
 }
 
 textarea {
@@ -31,7 +30,6 @@ a {
   position: absolute;
   top: 12px;
   right: 12px;
-  font-size: 18px;
 }
 
 .greenOut {
@@ -42,7 +40,7 @@ a {
   color: #000000;
   font-family: Verdana;
   font-size: 17px;
-  padding: 10px 23px;
+  padding: 10px 15px;
   text-decoration: none;
 }
 .greenOut:hover {
