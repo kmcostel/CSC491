@@ -25430,14 +25430,18 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
+	var _Account = __webpack_require__(238);
+
+	var _Account2 = _interopRequireDefault(_Account);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// modules/routes.js
 	module.exports = _react2.default.createElement(
 	   _reactRouter.Route,
 	   { path: '/', component: _App2.default },
-	   _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default })
-	);
+	   _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
+	   _react2.default.createElement(_reactRouter.Route, { path: '/account', component: _Account2.default })
+	); // modules/routes.js
 
 /***/ },
 /* 223 */
@@ -25514,11 +25518,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SearchBar = __webpack_require__(225);
-
-	var _SearchBar2 = _interopRequireDefault(_SearchBar);
-
-	var _FacebookButton = __webpack_require__(237);
+	var _FacebookButton = __webpack_require__(225);
 
 	var _FacebookButton2 = _interopRequireDefault(_FacebookButton);
 
@@ -25529,6 +25529,8 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // modules/Home.js
+
+	//import SearchBar from './SearchBar'
 
 
 	var Home = function (_React$Component) {
@@ -25546,7 +25548,7 @@
 	         return _react2.default.createElement(
 	            'div',
 	            null,
-	            _react2.default.createElement(_FacebookButton2.default, { fb: window.FB })
+	            _react2.default.createElement(_FacebookButton2.default, null)
 	         );
 	      }
 	   }]);
@@ -25572,7 +25574,178 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Results = __webpack_require__(226);
+	var _SearchBar = __webpack_require__(226);
+
+	var _SearchBar2 = _interopRequireDefault(_SearchBar);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //modules/FacebookButton.js
+
+
+	var FacebookButton = function (_React$Component) {
+	   _inherits(FacebookButton, _React$Component);
+
+	   function FacebookButton(props) {
+	      _classCallCheck(this, FacebookButton);
+
+	      var _this = _possibleConstructorReturn(this, (FacebookButton.__proto__ || Object.getPrototypeOf(FacebookButton)).call(this, props));
+
+	      _this.componentDidMount = _this.componentDidMount.bind(_this);
+	      _this.testAPI = _this.testAPI.bind(_this);
+	      _this.state = { user: null, loggedIn: false };
+	      return _this;
+	   }
+
+	   _createClass(FacebookButton, [{
+	      key: 'componentDidMount',
+	      value: function componentDidMount() {
+	         window.fbAsyncInit = function () {
+	            FB.init({
+	               appId: '375078696202555',
+	               cookie: true,
+	               xfbml: true,
+	               version: 'v2.8'
+	            });
+
+	            FB.getLoginStatus(function (response) {
+	               FB.Event.subscribe('auth.login', this.onLogin.bind(this));
+	               FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
+	               this.statusChangeCallback(response);
+	            }.bind(this));
+	         }.bind(this);
+
+	         // Load the SDK asynchronously
+	         (function (d, s, id) {
+	            var js,
+	                fjs = d.getElementsByTagName(s)[0];
+	            if (d.getElementById(id)) return;
+	            js = d.createElement(s);js.id = id;
+	            js.src = "//connect.facebook.net/en_US/sdk.js";
+	            fjs.parentNode.insertBefore(js, fjs);
+	         })(document, 'script', 'facebook-jssdk');
+	      }
+
+	      // Here we run a very simple test of the Graph API after login is
+	      // successful.  See statusChangeCallback() for when this call is made.
+
+	   }, {
+	      key: 'testAPI',
+	      value: function testAPI() {
+	         var self = this;
+	         FB.api('/me', function (response) {
+	            self.setState({ user: response.id });
+	            self.setState({ loggedIn: true });
+	         });
+	      }
+
+	      // This is called with the results from FB.getLoginStatus().
+
+	   }, {
+	      key: 'statusChangeCallback',
+	      value: function statusChangeCallback(response) {
+	         if (response.status === 'connected') {
+	            this.testAPI();
+	            this.setState({
+	               loggedIn: false
+	            });
+	         } else if (response.status === 'not_authorized') {
+	            // The person is logged into Facebook, but not your app.
+	         } else {
+	               // The person is not logged into Facebook, so we're not sure if
+	               // they are logged into this app or not.
+	            }
+	      }
+
+	      // This function is called when someone finishes with the Login
+	      // Button.  See the onlogin handler attached to it in the sample
+	      // code below.
+
+	   }, {
+	      key: 'checkLoginState',
+	      value: function checkLoginState() {
+	         FB.getLoginStatus(function (response) {
+	            this.statusChangeCallback(response);
+	         }.bind(this));
+	      }
+	   }, {
+	      key: 'handleClick',
+	      value: function handleClick() {
+	         FB.login(checkLoginState());
+	      }
+	   }, {
+	      key: 'onLogin',
+	      value: function onLogin(response) {
+	         if (response.status === 'connected') {
+	            this.setState({ user: response.authResponse.userID });
+	            this.setState({ loggedIn: true });
+	         }
+	      }
+	   }, {
+	      key: 'onLogout',
+	      value: function onLogout(response) {
+	         this.setState({
+	            user: null
+	         });
+	         this.setState({
+	            loggedIn: false
+	         });
+	      }
+	   }, {
+	      key: 'render',
+	      value: function render() {
+	         return _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	               'div',
+	               { className: 'topCorner' },
+	               this.state.loggedIn && _react2.default.createElement(
+	                  'a',
+	                  { className: 'account', href: '/account' },
+	                  'Account ',
+	                  '  '
+	               ),
+	               _react2.default.createElement('div', {
+	                  className: 'fb-login-button',
+	                  'data-max-rows': '1',
+	                  'data-size': 'large',
+	                  'data-show-faces': 'false',
+	                  'data-auto-logout-link': 'true'
+	               })
+	            ),
+	            _react2.default.createElement(_SearchBar2.default, { user: this.state.user, placeholder: '50 grams of raw spinach and 1 cup of pineapple' })
+	         );
+	      }
+	   }]);
+
+	   return FacebookButton;
+	}(_react2.default.Component);
+
+	exports.default = FacebookButton;
+	;
+
+/***/ },
+/* 226 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	   value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Results = __webpack_require__(227);
 
 	var _Results2 = _interopRequireDefault(_Results);
 
@@ -25615,19 +25788,20 @@
 	      key: 'getFoodInfo',
 	      value: function getFoodInfo(callback) {
 	         var enteredStr = document.getElementById('searchText').value;
-
 	         var data = { search: enteredStr, user: this.state.user };
 
-	         $.ajax({
-	            url: 'http://localhost:8080/nutri',
-	            type: 'POST',
-	            data: JSON.stringify(data),
-	            contentType: 'application/json; charset=utf-8',
-	            dataType: 'json',
-	            success: function success(response) {
-	               callback(response);
-	            }
-	         });
+	         if (enteredStr != '') {
+	            $.ajax({
+	               url: 'http://localhost:8080/nutri',
+	               type: 'POST',
+	               data: JSON.stringify(data),
+	               contentType: 'application/json; charset=utf-8',
+	               dataType: 'json',
+	               success: function success(response) {
+	                  callback(response);
+	               }
+	            });
+	         }
 	      }
 	   }, {
 	      key: 'render',
@@ -25636,20 +25810,25 @@
 
 	         return _react2.default.createElement(
 	            'div',
-	            { id: 'searchDiv' },
+	            { id: 'searchDv' },
 	            _react2.default.createElement(
 	               'p',
 	               null,
 	               ' What are you eating? '
 	            ),
-	            _react2.default.createElement('textarea', { id: 'searchText', placeholder: this.props.placeholder, cols: '80', rows: '1' }),
-	            ' \xA0',
 	            _react2.default.createElement(
-	               'button',
-	               { id: 'searchBtn', className: 'greenOut', onClick: function onClick() {
-	                     return _this2.getFoodInfo(_this2.updateState);
-	                  } },
-	               ' Search '
+	               'div',
+	               { id: 'searchDiv' },
+	               _react2.default.createElement('textarea', { id: 'searchText', placeholder: this.props.placeholder, cols: '80', rows: '1' }),
+	               ' ',
+	               ' ',
+	               _react2.default.createElement(
+	                  'button',
+	                  { id: 'searchBtn', className: 'greenOut', onClick: function onClick() {
+	                        return _this2.getFoodInfo(_this2.updateState);
+	                     } },
+	                  ' Search '
+	               )
 	            ),
 	            _react2.default.createElement(_Results2.default, { items: this.state.items })
 	         );
@@ -25662,7 +25841,7 @@
 	exports.default = SearchBar;
 
 /***/ },
-/* 226 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25686,7 +25865,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Results.js
 
 
-	var BarChart = __webpack_require__(227).Bar;
+	var BarChart = __webpack_require__(228).Bar;
 	//var Chart = require('chart.js');
 
 	var Results = function (_React$Component) {
@@ -25786,31 +25965,31 @@
 	exports.default = Results;
 
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-	  Bar: __webpack_require__(228),
-	  Doughnut: __webpack_require__(232),
-	  Line: __webpack_require__(233),
-	  Pie: __webpack_require__(234),
-	  PolarArea: __webpack_require__(235),
-	  Radar: __webpack_require__(236),
-	  createClass: __webpack_require__(229).createClass
+	  Bar: __webpack_require__(229),
+	  Doughnut: __webpack_require__(233),
+	  Line: __webpack_require__(234),
+	  Pie: __webpack_require__(235),
+	  PolarArea: __webpack_require__(236),
+	  Radar: __webpack_require__(237),
+	  createClass: __webpack_require__(230).createClass
 	};
 
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(229);
+	var vars = __webpack_require__(230);
 
 	module.exports = vars.createClass('Bar', ['getBarsAtEvent']);
 
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -25873,7 +26052,7 @@
 	    };
 
 	    classData.initializeChart = function(nextProps) {
-	      var Chart = __webpack_require__(230);
+	      var Chart = __webpack_require__(231);
 	      var el = ReactDOM.findDOMNode(this);
 	      var ctx = el.getContext("2d");
 	      var chart = new Chart(ctx)[chartType](nextProps.data, nextProps.options || {});
@@ -25964,7 +26143,7 @@
 
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -26278,7 +26457,7 @@
 				//Method for warning of errors
 				if (window.console && typeof window.console.warn === "function") console.warn(str);
 			},
-			amd = helpers.amd = ("function" === 'function' && __webpack_require__(231)),
+			amd = helpers.amd = ("function" === 'function' && __webpack_require__(232)),
 			//-- Math methods
 			isNumber = helpers.isNumber = function(n){
 				return !isNaN(parseFloat(n)) && isFinite(n);
@@ -29706,7 +29885,7 @@
 
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -29714,52 +29893,52 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 232 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var vars = __webpack_require__(229);
-
-	module.exports = vars.createClass('Doughnut', ['getSegmentsAtEvent']);
-
-
-/***/ },
 /* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(229);
+	var vars = __webpack_require__(230);
 
-	module.exports = vars.createClass('Line', ['getPointsAtEvent']);
+	module.exports = vars.createClass('Doughnut', ['getSegmentsAtEvent']);
 
 
 /***/ },
 /* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(229);
+	var vars = __webpack_require__(230);
 
-	module.exports = vars.createClass('Pie', ['getSegmentsAtEvent']);
+	module.exports = vars.createClass('Line', ['getPointsAtEvent']);
 
 
 /***/ },
 /* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(229);
+	var vars = __webpack_require__(230);
 
-	module.exports = vars.createClass('PolarArea', ['getSegmentsAtEvent']);
+	module.exports = vars.createClass('Pie', ['getSegmentsAtEvent']);
 
 
 /***/ },
 /* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(229);
+	var vars = __webpack_require__(230);
+
+	module.exports = vars.createClass('PolarArea', ['getSegmentsAtEvent']);
+
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var vars = __webpack_require__(230);
 
 	module.exports = vars.createClass('Radar', ['getPointsAtEvent']);
 
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29774,9 +29953,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _SearchBar = __webpack_require__(225);
+	var _Demographics = __webpack_require__(239);
 
-	var _SearchBar2 = _interopRequireDefault(_SearchBar);
+	var _Demographics2 = _interopRequireDefault(_Demographics);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -29784,108 +29963,26 @@
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //modules/FacebookButton.js
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // modules/Account.js
 
 
-	var FacebookButton = function (_React$Component) {
-	   _inherits(FacebookButton, _React$Component);
+	var Account = function (_React$Component) {
+	   _inherits(Account, _React$Component);
 
-	   function FacebookButton(props) {
-	      _classCallCheck(this, FacebookButton);
+	   function Account(props) {
+	      _classCallCheck(this, Account);
 
-	      var _this = _possibleConstructorReturn(this, (FacebookButton.__proto__ || Object.getPrototypeOf(FacebookButton)).call(this, props));
+	      var _this = _possibleConstructorReturn(this, (Account.__proto__ || Object.getPrototypeOf(Account)).call(this, props));
 
-	      _this.componentDidMount = _this.componentDidMount.bind(_this);
-	      _this.testAPI = _this.testAPI.bind(_this);
-	      _this.state = { user: null };
+	      _this.state = { fb: _this.props.fb };
 	      return _this;
 	   }
 
-	   _createClass(FacebookButton, [{
-	      key: 'componentDidMount',
-	      value: function componentDidMount() {
-	         window.fbAsyncInit = function () {
-	            FB.init({
-	               appId: '375078696202555',
-	               cookie: true,
-	               xfbml: true,
-	               version: 'v2.8'
-	            });
+	   _createClass(Account, [{
+	      key: 'componentWillMount',
+	      value: function componentWillMount() {
+	         //How to get userID?
 
-	            FB.getLoginStatus(function (response) {
-	               FB.Event.subscribe('auth.login', this.onLogin.bind(this));
-	               FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
-	               this.statusChangeCallback(response);
-	            }.bind(this));
-	         }.bind(this);
-
-	         // Load the SDK asynchronously
-	         (function (d, s, id) {
-	            var js,
-	                fjs = d.getElementsByTagName(s)[0];
-	            if (d.getElementById(id)) return;
-	            js = d.createElement(s);js.id = id;
-	            js.src = "//connect.facebook.net/en_US/sdk.js";
-	            fjs.parentNode.insertBefore(js, fjs);
-	         })(document, 'script', 'facebook-jssdk');
-	      }
-
-	      // Here we run a very simple test of the Graph API after login is
-	      // successful.  See statusChangeCallback() for when this call is made.
-
-	   }, {
-	      key: 'testAPI',
-	      value: function testAPI() {
-	         var self = this;
-	         FB.api('/me', function (response) {
-	            self.setState({ user: response.id });
-	         });
-	      }
-
-	      // This is called with the results from FB.getLoginStatus().
-
-	   }, {
-	      key: 'statusChangeCallback',
-	      value: function statusChangeCallback(response) {
-	         if (response.status === 'connected') {
-	            this.testAPI();
-	         } else if (response.status === 'not_authorized') {
-	            // The person is logged into Facebook, but not your app.
-	         } else {
-	               // The person is not logged into Facebook, so we're not sure if
-	               // they are logged into this app or not.
-	            }
-	      }
-
-	      // This function is called when someone finishes with the Login
-	      // Button.  See the onlogin handler attached to it in the sample
-	      // code below.
-
-	   }, {
-	      key: 'checkLoginState',
-	      value: function checkLoginState() {
-	         FB.getLoginStatus(function (response) {
-	            this.statusChangeCallback(response);
-	         }.bind(this));
-	      }
-	   }, {
-	      key: 'handleClick',
-	      value: function handleClick() {
-	         FB.login(checkLoginState());
-	      }
-	   }, {
-	      key: 'onLogin',
-	      value: function onLogin(response) {
-	         if (response.status === 'connected') {
-	            this.setState({ user: response.authResponse.userID });
-	         }
-	      }
-	   }, {
-	      key: 'onLogout',
-	      value: function onLogout(response) {
-	         this.setState({
-	            user: null
-	         });
 	      }
 	   }, {
 	      key: 'render',
@@ -29896,24 +29993,230 @@
 	            _react2.default.createElement(
 	               'div',
 	               { className: 'topCorner' },
-	               _react2.default.createElement('div', {
-	                  className: 'fb-login-button',
-	                  'data-max-rows': '1',
-	                  'data-size': 'large',
-	                  'data-show-faces': 'false',
-	                  'data-auto-logout-link': 'true'
-	               })
+	               _react2.default.createElement(
+	                  'a',
+	                  { className: 'account', href: '/' },
+	                  'Home'
+	               )
 	            ),
-	            _react2.default.createElement(_SearchBar2.default, { user: this.state.user, placeholder: '50 grams of raw spinach and 1 cup of pineapple' })
+	            _react2.default.createElement(
+	               'p',
+	               null,
+	               ' My Account '
+	            ),
+	            _react2.default.createElement(_Demographics2.default, null)
 	         );
 	      }
 	   }]);
 
-	   return FacebookButton;
+	   return Account;
 	}(_react2.default.Component);
 
-	exports.default = FacebookButton;
+	exports.default = Account;
 	;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _Searches = __webpack_require__(240);
+
+	var _Searches2 = _interopRequireDefault(_Searches);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // modules/Demographics.js
+
+
+	var BarChart = __webpack_require__(228).Bar;
+
+	var Demographics = function (_React$Component) {
+	  _inherits(Demographics, _React$Component);
+
+	  function Demographics(props) {
+	    _classCallCheck(this, Demographics);
+
+	    var _this = _possibleConstructorReturn(this, (Demographics.__proto__ || Object.getPrototypeOf(Demographics)).call(this, props));
+
+	    _this.componentDidMount = _this.componentDidMount.bind(_this);
+	    _this.testAPI = _this.testAPI.bind(_this);
+	    _this.state = { searches: [] };
+	    return _this;
+	  }
+
+	  _createClass(Demographics, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      window.fbAsyncInit = function () {
+	        FB.init({
+	          appId: '375078696202555',
+	          cookie: true,
+	          xfbml: true,
+	          version: 'v2.8'
+	        });
+
+	        FB.getLoginStatus(function (response) {
+	          this.testAPI();
+	        }.bind(this));
+	      }.bind(this);
+
+	      // Load the SDK asynchronously
+	      (function (d, s, id) {
+	        var js,
+	            fjs = d.getElementsByTagName(s)[0];
+	        if (d.getElementById(id)) return;
+	        js = d.createElement(s);js.id = id;
+	        js.src = "//connect.facebook.net/en_US/sdk.js";
+	        fjs.parentNode.insertBefore(js, fjs);
+	      })(document, 'script', 'facebook-jssdk');
+	    }
+
+	    // Here we run a very simple test of the Graph API after login is
+	    // successful.  See statusChangeCallback() for when this call is made.
+
+	  }, {
+	    key: 'testAPI',
+	    value: function testAPI() {
+	      var self = this;
+	      FB.api('/me', function (response) {
+	        self.setState({ user: response.id });
+	        self.setState({ loggedIn: true });
+	        $.ajax({
+	          url: 'http://localhost:8080/searches',
+	          type: 'POST',
+	          data: JSON.stringify({ userId: response.id }),
+	          contentType: 'application/json; charset=utf-8',
+	          dataType: 'json',
+	          success: function success(response) {
+	            console.log(response);
+	          }
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'getSearches',
+	    value: function getSearches(userID) {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+
+	      var searchList = [];
+	      var foods = this.state.searches.map(function (search, i) {
+	        searchList.push(search);
+
+	        return _react2.default.createElement(
+	          'li',
+	          { key: i },
+	          ' ',
+	          search,
+	          ' '
+	        );
+	      });
+
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'personalInfo' },
+	          'Age: \xA0',
+	          _react2.default.createElement('input', { type: 'number', name: 'age' }),
+	          ' years',
+	          _react2.default.createElement('br', null),
+	          'Height: \xA0',
+	          _react2.default.createElement('input', { type: 'number', name: 'height', value: '' }),
+	          ' inches',
+	          _react2.default.createElement('br', null),
+	          'Weight: \xA0',
+	          _react2.default.createElement('input', { type: 'number', name: 'weight', value: '' }),
+	          ' \xA0 lbs.',
+	          _react2.default.createElement('br', null),
+	          'Carbs-Insulin ratio (grams/unit): \xA0',
+	          _react2.default.createElement('input', { type: 'number', name: 'ratio', value: '' }),
+	          ' \xA0',
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('br', null),
+	          _react2.default.createElement('input', { type: 'submit', value: 'Save' })
+	        ),
+	        _react2.default.createElement(_Searches2.default, { searches: this.state.searches })
+	      );
+	    }
+	  }]);
+
+	  return Demographics;
+	}(_react2.default.Component);
+
+	exports.default = Demographics;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	   value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // modules/Searches.js
+
+
+	var Searches = function (_React$Component) {
+	   _inherits(Searches, _React$Component);
+
+	   function Searches() {
+	      _classCallCheck(this, Searches);
+
+	      return _possibleConstructorReturn(this, (Searches.__proto__ || Object.getPrototypeOf(Searches)).apply(this, arguments));
+	   }
+
+	   _createClass(Searches, [{
+	      key: 'render',
+	      value: function render() {
+	         return _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	               'p',
+	               null,
+	               ' Hi, seaches here '
+	            )
+	         );
+	      }
+	   }]);
+
+	   return Searches;
+	}(_react2.default.Component);
+
+	exports.default = Searches;
 
 /***/ }
 /******/ ]);

@@ -37,5 +37,13 @@ module.exports = {
          );
       }
 
+   },
+   getSearches: function(userID) {
+      var marklogic = require('marklogic');
+      var my = require('./my-connection.js');
+      var db = marklogic.createDatabaseClient(my.connInfo);
+      var qb = marklogic.queryBuilder;
+      var pb = marklogic.patchBuilder;
+      
    }
 }

@@ -22,27 +22,30 @@ export default class SearchBar extends React.Component {
 
    getFoodInfo(callback) {
       var enteredStr = document.getElementById('searchText').value;
-      
       var data = {search : enteredStr, user : this.state.user};
 
-      $.ajax({
-         url: 'http://localhost:8080/nutri',
-         type: 'POST',
-         data: JSON.stringify(data),
-         contentType: 'application/json; charset=utf-8',
-         dataType: 'json',
-         success: function(response){
-            callback(response);
-         }
-      }); 
+      if (enteredStr != '') {
+         $.ajax({
+            url: 'http://localhost:8080/nutri',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(response){
+               callback(response);
+            }
+         }); 
+      }
    }
 
    render() {
       return (
-         <div id='searchDiv'>
+         <div id='searchDv'>
             <p> What are you eating? </p>
-            <textarea id='searchText' placeholder={this.props.placeholder} cols='80' rows='1'/> &nbsp;
-            <button id='searchBtn' className='greenOut' onClick={() => this.getFoodInfo(this.updateState)}> Search </button>
+            <div id='searchDiv'>
+               <textarea id='searchText' placeholder={this.props.placeholder} cols='80' rows='1'/> {' '}
+               <button id='searchBtn' className='greenOut' onClick={() => this.getFoodInfo(this.updateState)}> Search </button>
+            </div>
             <Results items={this.state.items} />
          </div>
       );

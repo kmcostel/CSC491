@@ -17,19 +17,32 @@ a {
   color: #3ae64b;
 }
 
+input {
+  width: 60px;
+  height: 22px;
+}
+
 #searchBtn {
   position: absolute;
+  top: 0;
+  right: -25;
 }
 
 #searchDiv {
   display: inline-block;
+  text-align: center;
   position: relative;
+}
+
+.account {  
+  font: 17px "Lucida Grande", Helvetica, Arial;
 }
 
 .topCorner{
   position: absolute;
   top: 12px;
-  right: 12px;
+  right: 14px;
+  display: inline-block;
 }
 
 .greenOut {
@@ -38,9 +51,9 @@ a {
   display: inline-block;
   cursor: pointer;
   color: #000000;
+  padding: 10px 15px;
   font-family: Verdana;
   font-size: 17px;
-  padding: 10px 15px;
   text-decoration: none;
 }
 .greenOut:hover {
@@ -50,6 +63,6 @@ a {
   outline: 0;
 }
 .greenOut:active {
-  position: relative;
+/*  position: relative;*/
 }
 

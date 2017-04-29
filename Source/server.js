@@ -25,6 +25,7 @@ app.use(compression());
 
 // Parser for POST requests to server
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); 
 
 // Serve static stuff like index.css from directory 'public'
 app.use(express.static('public'))
@@ -52,6 +53,18 @@ app.post('/nutri', (req, res) => {
          res.send(answer);
       }
    });
+});
+
+app.post('/searches', (req,res) => {
+  console.log(req.body.userId);
+  res.setHeader('Content-Type', 'application/json');
+  res.send({hello: 'hello'});
+});
+
+app.post('/account', (req, res) => { 
+   console.log(req);
+   // console.log(req.params);
+   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 });
 
 app.get('*', (req, res) => {

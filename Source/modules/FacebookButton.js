@@ -8,7 +8,7 @@ export default class FacebookButton extends React.Component {
 
       this.componentDidMount = this.componentDidMount.bind(this);
       this.testAPI = this.testAPI.bind(this);
-      this.state = {user: null};      
+      this.state = {user: null, loggedIn: false};      
    }
 
    componentDidMount() {
@@ -45,6 +45,7 @@ export default class FacebookButton extends React.Component {
       var self = this;
       FB.api('/me', function(response) {
          self.setState({user: response.id});
+         self.setState({loggedIn: true});
       });
    }
 
@@ -52,6 +53,9 @@ export default class FacebookButton extends React.Component {
    statusChangeCallback(response) {
       if (response.status === 'connected') {
          this.testAPI();
+         this.setState({
+            loggedIn: false
+         });
       } else if (response.status === 'not_authorized') {
          // The person is logged into Facebook, but not your app.
       } else {
@@ -76,6 +80,7 @@ export default class FacebookButton extends React.Component {
    onLogin(response) { 
       if (response.status === 'connected') {
          this.setState({user: response.authResponse.userID});
+         this.setState({loggedIn: true});
       }
    }
       
@@ -83,12 +88,20 @@ export default class FacebookButton extends React.Component {
       this.setState({
          user: null
       });
+      this.setState({
+         loggedIn: false
+      });
    }
 
    render() {
       return (
          <div>
             <div className="topCorner">
+               {this.state.loggedIn && 
+                   <a className='account' href='/account'>
+                      Account {'  '}
+                   </a>
+               }
                <div 
                   className="fb-login-button" 
                   data-max-rows="1" 
