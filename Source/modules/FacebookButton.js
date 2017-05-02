@@ -53,9 +53,6 @@ export default class FacebookButton extends React.Component {
    statusChangeCallback(response) {
       if (response.status === 'connected') {
          this.testAPI();
-         this.setState({
-            loggedIn: false
-         });
       } else if (response.status === 'not_authorized') {
          // The person is logged into Facebook, but not your app.
       } else {

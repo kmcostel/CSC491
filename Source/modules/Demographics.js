@@ -11,7 +11,6 @@ export default class Demographics extends React.Component {
     this.state = {searches: []};
   }
 
-  
    componentDidMount() {
       window.fbAsyncInit = function() {
          FB.init({
@@ -45,16 +44,31 @@ export default class Demographics extends React.Component {
       FB.api('/me', function(response) {
          self.setState({user: response.id});
          self.setState({loggedIn: true});
+         // Find a user's searches
          $.ajax({
-            url: 'http://localhost:8080/searches',
+            url: 'http://localhost:8082/searches',
             type: 'POST',
-            data: JSON.stringify({userId: response.id}),
+            data: JSON.stringify({user: response.id}),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             success: function(response){
+               console.log('searches here');
                console.log(response);
             }
          }); 
+         // Find a user's demographics
+         $.ajax({
+            url: 'http://localhost:8082/demographics',
+            type: 'POST',
+            data: JSON.stringify({user: response.id}),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(response){
+               console.log('demographics here');
+               console.log(response);
+            }
+         }); 
+
       });
    }
 
@@ -65,7 +79,7 @@ export default class Demographics extends React.Component {
   render() {
     
     var searchList = [];
-    var foods = this.state.searches.map(function(search, i) {
+    var searches = this.state.searches.map(function(search, i) {
       searchList.push(search);
       
       return (
@@ -80,10 +94,10 @@ export default class Demographics extends React.Component {
           <input type="number" name="age"/> years
           <br/>
           Height: &nbsp;
-          <input type="number" name="height" value=""/> inches
+          <input type="number" name="height"/> inches
           <br/>
           Weight: &nbsp;
-          <input type="number" name="weight" value=""/> &nbsp; lbs.
+          <input type="number" name="weight" /> &nbsp; lbs.
           <br/>
           Carbs-Insulin ratio (grams/unit): &nbsp;
           <input type="number" name="ratio" value=""/> &nbsp; 

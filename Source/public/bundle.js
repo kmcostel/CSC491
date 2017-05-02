@@ -25650,9 +25650,6 @@
 	      value: function statusChangeCallback(response) {
 	         if (response.status === 'connected') {
 	            this.testAPI();
-	            this.setState({
-	               loggedIn: false
-	            });
 	         } else if (response.status === 'not_authorized') {
 	            // The person is logged into Facebook, but not your app.
 	         } else {
@@ -30022,7 +30019,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	   value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -30047,119 +30044,133 @@
 	var BarChart = __webpack_require__(228).Bar;
 
 	var Demographics = function (_React$Component) {
-	  _inherits(Demographics, _React$Component);
+	   _inherits(Demographics, _React$Component);
 
-	  function Demographics(props) {
-	    _classCallCheck(this, Demographics);
+	   function Demographics(props) {
+	      _classCallCheck(this, Demographics);
 
-	    var _this = _possibleConstructorReturn(this, (Demographics.__proto__ || Object.getPrototypeOf(Demographics)).call(this, props));
+	      var _this = _possibleConstructorReturn(this, (Demographics.__proto__ || Object.getPrototypeOf(Demographics)).call(this, props));
 
-	    _this.componentDidMount = _this.componentDidMount.bind(_this);
-	    _this.testAPI = _this.testAPI.bind(_this);
-	    _this.state = { searches: [] };
-	    return _this;
-	  }
+	      _this.componentDidMount = _this.componentDidMount.bind(_this);
+	      _this.testAPI = _this.testAPI.bind(_this);
+	      _this.state = { searches: [] };
+	      return _this;
+	   }
 
-	  _createClass(Demographics, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      window.fbAsyncInit = function () {
-	        FB.init({
-	          appId: '375078696202555',
-	          cookie: true,
-	          xfbml: true,
-	          version: 'v2.8'
-	        });
+	   _createClass(Demographics, [{
+	      key: 'componentDidMount',
+	      value: function componentDidMount() {
+	         window.fbAsyncInit = function () {
+	            FB.init({
+	               appId: '375078696202555',
+	               cookie: true,
+	               xfbml: true,
+	               version: 'v2.8'
+	            });
 
-	        FB.getLoginStatus(function (response) {
-	          this.testAPI();
-	        }.bind(this));
-	      }.bind(this);
+	            FB.getLoginStatus(function (response) {
+	               this.testAPI();
+	            }.bind(this));
+	         }.bind(this);
 
-	      // Load the SDK asynchronously
-	      (function (d, s, id) {
-	        var js,
-	            fjs = d.getElementsByTagName(s)[0];
-	        if (d.getElementById(id)) return;
-	        js = d.createElement(s);js.id = id;
-	        js.src = "//connect.facebook.net/en_US/sdk.js";
-	        fjs.parentNode.insertBefore(js, fjs);
-	      })(document, 'script', 'facebook-jssdk');
-	    }
+	         // Load the SDK asynchronously
+	         (function (d, s, id) {
+	            var js,
+	                fjs = d.getElementsByTagName(s)[0];
+	            if (d.getElementById(id)) return;
+	            js = d.createElement(s);js.id = id;
+	            js.src = "//connect.facebook.net/en_US/sdk.js";
+	            fjs.parentNode.insertBefore(js, fjs);
+	         })(document, 'script', 'facebook-jssdk');
+	      }
 
-	    // Here we run a very simple test of the Graph API after login is
-	    // successful.  See statusChangeCallback() for when this call is made.
+	      // Here we run a very simple test of the Graph API after login is
+	      // successful.  See statusChangeCallback() for when this call is made.
 
-	  }, {
-	    key: 'testAPI',
-	    value: function testAPI() {
-	      var self = this;
-	      FB.api('/me', function (response) {
-	        self.setState({ user: response.id });
-	        self.setState({ loggedIn: true });
-	        $.ajax({
-	          url: 'http://localhost:8080/searches',
-	          type: 'POST',
-	          data: JSON.stringify({ userId: response.id }),
-	          contentType: 'application/json; charset=utf-8',
-	          dataType: 'json',
-	          success: function success(response) {
-	            console.log(response);
-	          }
-	        });
-	      });
-	    }
-	  }, {
-	    key: 'getSearches',
-	    value: function getSearches(userID) {}
-	  }, {
-	    key: 'render',
-	    value: function render() {
+	   }, {
+	      key: 'testAPI',
+	      value: function testAPI() {
+	         var self = this;
+	         FB.api('/me', function (response) {
+	            self.setState({ user: response.id });
+	            self.setState({ loggedIn: true });
+	            // Find a user's searches
+	            $.ajax({
+	               url: 'http://localhost:8082/searches',
+	               type: 'POST',
+	               data: JSON.stringify({ user: response.id }),
+	               contentType: 'application/json; charset=utf-8',
+	               dataType: 'json',
+	               success: function success(response) {
+	                  console.log('searches here');
+	                  console.log(response);
+	               }
+	            });
+	            // Find a user's demographics
+	            $.ajax({
+	               url: 'http://localhost:8082/demographics',
+	               type: 'POST',
+	               data: JSON.stringify({ user: response.id }),
+	               contentType: 'application/json; charset=utf-8',
+	               dataType: 'json',
+	               success: function success(response) {
+	                  console.log('demographics here');
+	                  console.log(response);
+	               }
+	            });
+	         });
+	      }
+	   }, {
+	      key: 'getSearches',
+	      value: function getSearches(userID) {}
+	   }, {
+	      key: 'render',
+	      value: function render() {
 
-	      var searchList = [];
-	      var foods = this.state.searches.map(function (search, i) {
-	        searchList.push(search);
+	         var searchList = [];
+	         var searches = this.state.searches.map(function (search, i) {
+	            searchList.push(search);
 
-	        return _react2.default.createElement(
-	          'li',
-	          { key: i },
-	          ' ',
-	          search,
-	          ' '
-	        );
-	      });
+	            return _react2.default.createElement(
+	               'li',
+	               { key: i },
+	               ' ',
+	               search,
+	               ' '
+	            );
+	         });
 
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	          'div',
-	          { id: 'personalInfo' },
-	          'Age: \xA0',
-	          _react2.default.createElement('input', { type: 'number', name: 'age' }),
-	          ' years',
-	          _react2.default.createElement('br', null),
-	          'Height: \xA0',
-	          _react2.default.createElement('input', { type: 'number', name: 'height', value: '' }),
-	          ' inches',
-	          _react2.default.createElement('br', null),
-	          'Weight: \xA0',
-	          _react2.default.createElement('input', { type: 'number', name: 'weight', value: '' }),
-	          ' \xA0 lbs.',
-	          _react2.default.createElement('br', null),
-	          'Carbs-Insulin ratio (grams/unit): \xA0',
-	          _react2.default.createElement('input', { type: 'number', name: 'ratio', value: '' }),
-	          ' \xA0',
-	          _react2.default.createElement('br', null),
-	          _react2.default.createElement('br', null),
-	          _react2.default.createElement('input', { type: 'submit', value: 'Save' })
-	        ),
-	        _react2.default.createElement(_Searches2.default, { searches: this.state.searches })
-	      );
-	    }
-	  }]);
+	         return _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	               'div',
+	               { id: 'personalInfo' },
+	               'Age: \xA0',
+	               _react2.default.createElement('input', { type: 'number', name: 'age' }),
+	               ' years',
+	               _react2.default.createElement('br', null),
+	               'Height: \xA0',
+	               _react2.default.createElement('input', { type: 'number', name: 'height' }),
+	               ' inches',
+	               _react2.default.createElement('br', null),
+	               'Weight: \xA0',
+	               _react2.default.createElement('input', { type: 'number', name: 'weight' }),
+	               ' \xA0 lbs.',
+	               _react2.default.createElement('br', null),
+	               'Carbs-Insulin ratio (grams/unit): \xA0',
+	               _react2.default.createElement('input', { type: 'number', name: 'ratio', value: '' }),
+	               ' \xA0',
+	               _react2.default.createElement('br', null),
+	               _react2.default.createElement('br', null),
+	               _react2.default.createElement('input', { type: 'submit', value: 'Save' })
+	            ),
+	            _react2.default.createElement(_Searches2.default, { searches: this.state.searches })
+	         );
+	      }
+	   }]);
 
-	  return Demographics;
+	   return Demographics;
 	}(_react2.default.Component);
 
 	exports.default = Demographics;

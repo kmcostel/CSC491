@@ -10,13 +10,14 @@ module.exports = {
       console.log('Updating user ' + userId + ' with ' + searchStr);
       db.documents.read('/user/' + userId + '.json')
          .result( function(documents) {
-         // Use documents.write() if a user doesn't exist in the database.
-         // Otherwise use the documents.patch() function to update their search history
-         if (documents.length == 0) writeUser();
-         else updateUser();
-      }, function(error) {
-         console.log(JSON.stringify(error, null, 2));
-      });
+            // Use documents.write() if a user doesn't exist in the database.
+            // Otherwise use the documents.patch() function to update their search history
+            if (documents.length == 0) writeUser();
+            else updateUser();
+         }, function(error) {
+            console.log(JSON.stringify(error, null, 2));
+         }
+      );
 
       var writeUser = function() {
          db.documents.write(
@@ -38,12 +39,42 @@ module.exports = {
       }
 
    },
-   getSearches: function(userID) {
+   getSearches: function(userId, res) {
       var marklogic = require('marklogic');
       var my = require('./my-connection.js');
       var db = marklogic.createDatabaseClient(my.connInfo);
       var qb = marklogic.queryBuilder;
-      var pb = marklogic.patchBuilder;
-      
+      var results; 
+      db.documents.read('/user/' + userId + '.json')
+         .result( function(documents) {
+            console.log(documents);
+            results = documents[0].content.searches;
+            res.send({'searches' : results});
+            return;
+         }, 
+         function(error) {
+            console.log(JSON.stringify(error, null, 2));
+         }
+      ); 
+   },
+   getDemo: function(userId) {
+      var marklogic = require('marklogic');
+      var my = require('./my-connection.js');
+      var db = marklogic.createDatabaseClient(my.connInfo);
+      var qb = marklogic.queryBuilder;
+      var results;
+      db.documents.read('/user/' + userId + '.json')
+         .result( function(documents) {
+            console.log(documents);
+            results = documents[0].content;
+            return {'demographics' : results};
+            console.log(results);
+         }, 
+         function(error) {
+            console.log(JSON.stringify(error, null, 2));
+         }
+      );
    }
+
 }
+

@@ -56,15 +56,25 @@ app.post('/nutri', (req, res) => {
 });
 
 app.post('/searches', (req,res) => {
-  console.log(req.body.userId);
   res.setHeader('Content-Type', 'application/json');
-  res.send({hello: 'hello'});
+  var searches = {};
+  if (req.body.user != null) {
+    //getSearches sends the search data found back to the client
+    ml.getSearches(req.body.user, res);
+  }
 });
 
-app.post('/account', (req, res) => { 
-   console.log(req);
-   // console.log(req.params);
-   res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+app.post('/demographics', (req, res) => { 
+//   res.setHeader('Content-Type', 'application/json');
+   var demoObj = {};
+   if (req.body.user != null) {
+      demoObj = ml.getDemo(req.body.user)
+      res.send(demoObj);
+   }
+   else {
+      res.send({'results': 'none, server error?'});
+   }
+  
 });
 
 app.get('*', (req, res) => {
@@ -79,5 +89,5 @@ var PORT = process.env.PORT || 8080
 //   console.log('Listening on port ' + PORT);
 // });
 
-app.listen(PORT);
+app.listen(8082);
 console.log('Listening on port ' + PORT);
