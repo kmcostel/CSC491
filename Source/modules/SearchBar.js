@@ -6,8 +6,19 @@ export default class SearchBar extends React.Component {
    constructor(props) {
       super(props);
       this.updateState = this.updateState.bind(this);
+      this.componentDidMount = this.componentDidMount.bind(this);
       this.getFoodInfo = this.getFoodInfo.bind(this);
       this.state = {items: [], user: props.user};
+   }
+
+   componentDidMount() {
+      var str = location.search.split('search=')[1];
+      // translates %20 back into space
+      var search = decodeURI(str);
+      if (search != 'undefined') {
+         $('textarea#searchText').val(search);
+         this.getFoodInfo(this.updateState);
+      }
    }
 
    updateState(response) {

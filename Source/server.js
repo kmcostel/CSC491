@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
 
 // Serve static stuff like index.css from directory 'public'
-app.use(express.static('public'))
+app.use(express.static('public'));
 
 // Favicon
 app.use(favicon('public/images/donut.ico'));
@@ -55,26 +55,31 @@ app.post('/nutri', (req, res) => {
    });
 });
 
-app.post('/searches', (req,res) => {
+// Check if the user exists
+app.post('/signin', (req, res) => {
+//  console.log('signing in');
+  ml.checkUser(req.body.user);
+});
+
+app.post('/userInfo', (req,res) => {
   res.setHeader('Content-Type', 'application/json');
   var searches = {};
   if (req.body.user != null) {
     //getSearches sends the search data found back to the client
-    ml.getSearches(req.body.user, res);
+    ml.getUserInfo(req.body.user, res);
   }
 });
 
-app.post('/demographics', (req, res) => { 
-//   res.setHeader('Content-Type', 'application/json');
-   var demoObj = {};
+app.post('/saveDems', (req, res) => { 
+   res.setHeader('Content-Type', 'application/json');
    if (req.body.user != null) {
-      demoObj = ml.getDemo(req.body.user)
-      res.send(demoObj);
+      // TODO: Create ml function to save the user's entered demographic info
+     ml.saveDems(req.body)
+     res.send({success: 'success'});
    }
    else {
-      res.send({'results': 'none, server error?'});
+      //res.send({'results': 'none, server error?'});
    }
-  
 });
 
 app.get('*', (req, res) => {
@@ -83,11 +88,11 @@ app.get('*', (req, res) => {
 
 var PORT = process.env.PORT || 8080
 
-// pem module creates credentials on the fly
-// pem.createCertificate({days:1, selfSigned:true}, function(err, keys){
-//   https.createServer({key: keys.serviceKey, cert: keys.certificate}, app).listen(PORT);
-//   console.log('Listening on port ' + PORT);
-// });
+/* pem module creates credentials on the fly
+ pem.createCertificate({days:1, selfSigned:true}, function(err, keys){
+   https.createServer({key: keys.serviceKey, cert: keys.certificate}, app).listen(PORT);
+   console.log('Listening on port ' + PORT);
+ }); */
 
-app.listen(8082);
+app.listen(PORT);
 console.log('Listening on port ' + PORT);

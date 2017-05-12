@@ -21,9 +21,22 @@ export default class FacebookButton extends React.Component {
          });
 
          FB.getLoginStatus(function(response) {
+            var data = {user : response.authResponse.userID};
             FB.Event.subscribe('auth.login', this.onLogin.bind(this));
             FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
             this.statusChangeCallback(response);
+
+         $.ajax({
+            url: 'http://localhost:8080/signin',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(response){
+               console.log('success sign in from module/facebook');
+            }
+         }); 
+
          }.bind(this));
       }.bind(this);
 
@@ -51,8 +64,20 @@ export default class FacebookButton extends React.Component {
 
    // This is called with the results from FB.getLoginStatus().
    statusChangeCallback(response) {
+      var data = {user : response.authResponse.userID};
       if (response.status === 'connected') {
          this.testAPI();
+         // ensures the user has an account for them in the database
+         $.ajax({
+            url: 'http://localhost:8080/signin',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(response){
+               console.log('success sign in from module/facebook');
+            }
+         }); 
       } else if (response.status === 'not_authorized') {
          // The person is logged into Facebook, but not your app.
       } else {
@@ -61,23 +86,22 @@ export default class FacebookButton extends React.Component {
       }
    }
 
-   // This function is called when someone finishes with the Login
-   // Button.  See the onlogin handler attached to it in the sample
-   // code below.
-   checkLoginState() {
-      FB.getLoginStatus(function(response) {
-         this.statusChangeCallback(response);
-      }.bind(this));
-   }
-
-   handleClick() {
-      FB.login(checkLoginState());
-   }
-
    onLogin(response) { 
       if (response.status === 'connected') {
+         var data = {user : response.authResponse.userID};
          this.setState({user: response.authResponse.userID});
          this.setState({loggedIn: true});
+    /*     $.ajax({
+            url: 'http://localhost:8080/signin',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            success: function(response){
+               console.log('success sign in from module/facebook');
+            }
+         }); 
+         */
       }
    }
       
@@ -108,7 +132,7 @@ export default class FacebookButton extends React.Component {
                   >
                </div>
             </div>
-            <SearchBar user={this.state.user} placeholder='50 grams of raw spinach and 1 cup of pineapple' />          
+            <SearchBar user={this.state.user} placeholder='50 grams of cooked spinach and 1 cup of pineapple' />          
         </div>
       );
    }

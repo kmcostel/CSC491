@@ -22,6 +22,23 @@ input {
   height: 22px;
 }
 
+ul {
+  overflow: scroll;
+  height: 200px;
+  border: 2px solid #ccc;
+  font-size: 16px;
+  padding: 0px;
+}
+
+li {
+  list-style-type: none; /* removes the left dots */
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+  &:nth-child(even) {
+    background: #f4f4f4;
+  }
+}
+
 #searchBtn {
   position: absolute;
   top: 0;
@@ -34,12 +51,27 @@ input {
   position: relative;
 }
 
+#saveButton {
+  float: left;
+  position: relative;
+  bottom: 0;
+}
+
+#personalInfo { /* Area of Account where height, weight, age, insulin entered */
+  font: 20px "Lucida Grande", Helvetica, Arial;
+  float: left;
+}
+
+#personalInfoContainer {
+  overflow: hidden;
+}
+
 .account {  
   font: 17px "Lucida Grande", Helvetica, Arial;
 }
 
 .topCorner{
-  position: absolute;
+  position: fixed;
   top: 12px;
   right: 14px;
   display: inline-block;
@@ -63,6 +95,6 @@ input {
   outline: 0;
 }
 .greenOut:active {
-/*  position: relative;*/
+/* position: relative; */
 }
 

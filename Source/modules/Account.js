@@ -8,16 +8,13 @@ export default class Account extends React.Component {
       this.state = {fb: this.props.fb};
    }
 
-   componentWillMount() {
-      //How to get userID?
-      
-   }
+   componentWillMount() { }
 
    render() {
       return (
          <div>
            <div className='topCorner'><a className='account' href='/'>Home</a></div>
-           <p> My Account </p>
+           <p>Past Searches</p>
            <Demographics/>
          </div>
       );
