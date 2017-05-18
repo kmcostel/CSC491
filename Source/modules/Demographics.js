@@ -54,9 +54,6 @@ export default class Demographics extends React.Component {
             dataType: 'json',
             success: function(response){
                self.setState({searches: response.userInfo.searches});
-               // TODO, set user's demographics here too
-// Right now the demographics form on the acount page doesn't do anything
-// Implement the save button to edit stuff about the user
                self.setState({age: response.userInfo.demographics.age});
                self.setState({height: response.userInfo.demographics.height});
                self.setState({weight: response.userInfo.demographics.weight});
@@ -110,13 +107,14 @@ export default class Demographics extends React.Component {
       // if not signed in, send back an unauthorized error
       <div>
         <Searches searches={this.state.searches}/>
+        <br/>
         <div id='personalInfoContainter'>
           <div id='personalInfo'>
             Age: &nbsp; 
             <input id='ageInput' type='number' placeholder={this.state.age} name='age'/> years
             <br/>
             Height: &nbsp;
-            <input id='heightInput' type="number" placeholder={this.state.height} name='height'/> inches
+            <input id='heightInput' type='number' placeholder={this.state.height} name='height'/> inches
             <br/>
             Weight: &nbsp;
             <input id='weightInput' type='number' placeholder={this.state.weight} name='weight'/> &nbsp; lbs.
@@ -125,7 +123,7 @@ export default class Demographics extends React.Component {
             <input id='insulinInput' type='number' placeholder={this.state.insulin} name='ratio'/> &nbsp; 
           </div>
           <div> 
-            <button className='greenOut' id='saveButton' onClick={() => this.saveDems()}> Save </button>
+            <button id='saveButton' className='greenOut' onClick={() => this.saveDems()}> Save </button>
           </div>
         </div>
       </div>

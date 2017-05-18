@@ -12,8 +12,20 @@ textarea {
   color: black;
 }
 
+textarea:focus {
+  outline: 1px solid #3ae64b;
+}
+
 a {
   text-decoration: none;
+  color: #3ae64b;
+}
+
+a.list {
+  color: black;
+}
+
+a.list:hover {
   color: #3ae64b;
 }
 
@@ -34,15 +46,17 @@ li {
   list-style-type: none; /* removes the left dots */
   padding: 10px 20px;
   border-bottom: 1px solid #ccc;
-  &:nth-child(even) {
-    background: #f4f4f4;
-  }
+  color: black;
+}
+
+li:nth-child(even) {
+  background: #f8f8f8;
 }
 
 #searchBtn {
-  position: absolute;
-  top: 0;
-  right: -25;
+  position: relative; 
+  top: -16;
+  right: -5;
 }
 
 #searchDiv {
@@ -52,9 +66,12 @@ li {
 }
 
 #saveButton {
-  float: left;
-  position: relative;
-  bottom: 0;
+/*  position: relative;
+  bottom: -57;
+  left: 40;
+*/
+  font-size: 15px;
+  padding: 5px 10px;  
 }
 
 #personalInfo { /* Area of Account where height, weight, age, insulin entered */

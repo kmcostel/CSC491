@@ -925,9 +925,6 @@
 	          dataType: 'json',
 	          success: function success(response) {
 	            self.setState({ searches: response.userInfo.searches });
-	            // TODO, set user's demographics here too
-	            // Right now the demographics form on the acount page doesn't do anything
-	            // Implement the save button to edit stuff about the user
 	            self.setState({ age: response.userInfo.demographics.age });
 	            self.setState({ height: response.userInfo.demographics.height });
 	            self.setState({ weight: response.userInfo.demographics.weight });
@@ -984,6 +981,7 @@
 	          'div',
 	          null,
 	          _react2.default.createElement(_Searches2.default, { searches: this.state.searches }),
+	          _react2.default.createElement('br', null),
 	          _react2.default.createElement(
 	            'div',
 	            { id: 'personalInfoContainter' },
@@ -1011,7 +1009,7 @@
 	              null,
 	              _react2.default.createElement(
 	                'button',
-	                { className: 'greenOut', id: 'saveButton', onClick: function onClick() {
+	                { id: 'saveButton', className: 'greenOut', onClick: function onClick() {
 	                    return _this2.saveDems();
 	                  } },
 	                ' Save '
@@ -1069,12 +1067,11 @@
 	  _createClass(Searches, [{
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
-	      this.setState({ searches: nextProps.searches });
+	      this.setState({ searches: nextProps.searches.reverse() });
 	    }
 	  }, {
 	    key: 'buildLink',
 	    value: function buildLink(search) {
-	      console.log('/?search=' + search.search);
 	      return '/?search=' + search.search;
 	    }
 	  }, {
@@ -1088,7 +1085,7 @@
 	          ' ',
 	          _react2.default.createElement(
 	            'a',
-	            { href: self.buildLink({ search: search }) },
+	            { className: 'list', href: self.buildLink({ search: search }) },
 	            ' ',
 	            search,
 	            ' '

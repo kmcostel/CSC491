@@ -9,11 +9,10 @@ export default class Searches extends React.Component {
   }
 
    componentWillReceiveProps(nextProps) {
-      this.setState({ searches: nextProps.searches });  
+      this.setState({ searches: nextProps.searches.reverse() });  
    }
 
    buildLink(search) {
-     console.log('/?search='+search.search);  
      return '/?search='+search.search;
    }
 
@@ -21,7 +20,7 @@ export default class Searches extends React.Component {
      var self = this;    
      var searches = this.state.searches.map(function(search, i) {
        return (
-         <li key={i}> <a href={self.buildLink({search})}> {search} </a> </li>
+         <li key={i}> <a className='list' href={self.buildLink({search})}> {search} </a> </li>
        );
 		 });
       return ( 
