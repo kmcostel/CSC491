@@ -53,6 +53,72 @@ li:nth-child(even) {
   background: #f8f8f8;
 }
 
+img {
+  transform: translateX(50px);
+}
+
+#arrowContainer {
+  height: 100px;
+  width: 40%;
+  display: inline-table;
+  position: relative; 
+  top: 50%;
+  animation-name: slideRight;
+  animation-duration: 2.5s;
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(90px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+#insulinAnimation {
+  padding-left: 7%; /* Move the carb div to the right */
+}
+
+#insulin {
+  font: 27px "Lucida Grande", Helvetica, Arial;
+  display: inline-table;
+  text-align: center;
+  background-color: #e2e2e2;
+  border: 4px solid #3ae64b;
+  height: 70px;
+  width: 200px;
+  
+  transform: translateY(-85px);
+}
+
+#insulin span {
+  display: block;
+  position: relative;
+  top: 50%;
+}
+
+#carbs {
+  font: 27px "Lucida Grande", Helvetica, Arial;
+  display: inline-table;
+  text-align: center;
+  background-color: #e2e2e2;
+  border: 4px solid #3ae64b;
+  height: 70px;
+  width: 200px;
+
+  transform: translateY(-85px);
+}
+
+#carbs span {
+  display: block;
+  position: relative;
+  top: 50%;
+}
+
 #searchBtn {
   position: relative; 
   top: -16;
@@ -66,10 +132,6 @@ li:nth-child(even) {
 }
 
 #saveButton {
-/*  position: relative;
-  bottom: -57;
-  left: 40;
-*/
   font-size: 15px;
   padding: 5px 10px;  
 }
@@ -88,10 +150,14 @@ li:nth-child(even) {
 }
 
 .topCorner{
-  position: fixed;
+  position: absolute;
   top: 12px;
   right: 14px;
   display: inline-block;
+}
+
+.topCorner span {
+  padding-left: 4px;
 }
 
 .greenOut {
@@ -110,8 +176,5 @@ li:nth-child(even) {
 }
 .greenOut:focus{
   outline: 0;
-}
-.greenOut:active {
-/* position: relative; */
 }
 

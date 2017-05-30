@@ -25430,7 +25430,7 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Account = __webpack_require__(238);
+	var _Account = __webpack_require__(239);
 
 	var _Account2 = _interopRequireDefault(_Account);
 
@@ -25858,7 +25858,7 @@
 	                  ' Search '
 	               )
 	            ),
-	            _react2.default.createElement(_Results2.default, { items: this.state.items })
+	            _react2.default.createElement(_Results2.default, { items: this.state.items, user: this.state.user })
 	         );
 	      }
 	   }]);
@@ -25884,6 +25884,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _CarbInsulin = __webpack_require__(228);
+
+	var _CarbInsulin2 = _interopRequireDefault(_CarbInsulin);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25893,7 +25897,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Results.js
 
 
-	var BarChart = __webpack_require__(228).Bar;
+	var BarChart = __webpack_require__(229).Bar;
 	//var Chart = require('chart.js');
 
 	var Results = function (_React$Component) {
@@ -25902,10 +25906,38 @@
 	  function Results(props) {
 	    _classCallCheck(this, Results);
 
-	    return _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
+
+	    _this.componentWillMount = _this.componentWillMount.bind(_this);
+	    _this.componentWillReceiveProps = _this.componentWillReceiveProps.bind(_this);
+	    _this.state = { user: props.user, insulin: 3 };
+	    return _this;
 	  }
 
 	  _createClass(Results, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      // set state with insulin amount user specified
+	      var self = this;
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      var self = this;
+	      this.setState({ user: nextProps.user });
+
+	      $.ajax({
+	        url: 'http://localhost:8080/userInfo',
+	        type: 'POST',
+	        data: JSON.stringify({ user: nextProps.user }),
+	        contentType: 'application/json; charset=utf-8',
+	        dataType: 'json',
+	        success: function success(response) {
+	          self.setState({ insulin: response.userInfo.demographics.insulin });
+	        }
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 
@@ -25928,14 +25960,18 @@
 	        );
 	      });
 
+	      // None of this affects the chart... http://www.chartjs.org/docs/latest/configuration/tooltip.html 
 	      var chartOptions = {
 	        tooltips: {
 	          enabled: false
 	        },
-	        stacked: true
+	        animation: {
+	          easing: 'easeOutElastic'
+	        }
 	      };
 
 	      var barChart = null;
+	      var carbInsulinAnimation = null;
 	      var fats = 0;
 	      var protein = 0;
 	      var sugar = 0;
@@ -25962,6 +25998,7 @@
 	      };
 
 	      for (var i = 0; i < foodList.length; i++) {
+	        carbs += foodList[i].carbs;
 	        chartData.datasets.push({
 	          label: foodList[i].name,
 	          fillColor: '#' + ("000000" + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6),
@@ -25973,6 +26010,9 @@
 	          data: [foodList[i].carbs, foodList[i].fat, foodList[i].protein, foodList[i].sugar]
 	        });
 	      };
+	      if (carbs == 0) {
+	        carbs = -1;
+	      }
 
 	      if (this.props.items.length > 0) {
 	        barChart = _react2.default.createElement(BarChart, { data: chartData, options: chartOptions, redraw: true, width: '650', height: '325' });
@@ -25982,7 +26022,15 @@
 	        'div',
 	        null,
 	        foods,
-	        barChart
+	        barChart,
+	        _react2.default.createElement('br', null),
+	        ' ',
+	        _react2.default.createElement('br', null),
+	        ' ',
+	        _react2.default.createElement('br', null),
+	        ' ',
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(_CarbInsulin2.default, { insulin: this.state.insulin, carbs: carbs })
 	      );
 	    }
 	  }]);
@@ -25996,28 +26044,121 @@
 /* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-	  Bar: __webpack_require__(229),
-	  Doughnut: __webpack_require__(233),
-	  Line: __webpack_require__(234),
-	  Pie: __webpack_require__(235),
-	  PolarArea: __webpack_require__(236),
-	  Radar: __webpack_require__(237),
-	  createClass: __webpack_require__(230).createClass
-	};
+	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // CarbInsulin.js
+
+
+	var CarbInsulin = function (_React$Component) {
+	  _inherits(CarbInsulin, _React$Component);
+
+	  function CarbInsulin(props) {
+	    _classCallCheck(this, CarbInsulin);
+
+	    var _this = _possibleConstructorReturn(this, (CarbInsulin.__proto__ || Object.getPrototypeOf(CarbInsulin)).call(this, props));
+
+	    _this.componentWillReceiveProps = _this.componentWillReceiveProps.bind(_this);
+	    _this.state = { insulin: props.insulin, carbs: -1 };
+	    return _this;
+	  }
+
+	  _createClass(CarbInsulin, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.insulin != undefined) {
+	        this.setState({ insulin: nextProps.insulin });
+	      }
+	      if (nextProps.carbs != undefined) {
+	        this.setState({ carbs: Math.round(nextProps.carbs * 10) / 10 });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+
+	      if (this.state.insulin != undefined && this.state.carbs > -1) {
+	        return _react2.default.createElement(
+	          'div',
+	          { id: 'insulinAnimation' },
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'carbs' },
+	            ' ',
+	            this.state.carbs,
+	            ' carbs '
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'arrowContainer' },
+	            ' ',
+	            _react2.default.createElement('img', { src: '/images/arrow.png', width: '150', alt: 'arrow' }),
+	            '  '
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'insulin' },
+	            ' ',
+	            this.state.insulin,
+	            ' IU '
+	          )
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          ' '
+	        );
+	      }
+	    }
+	  }]);
+
+	  return CarbInsulin;
+	}(_react2.default.Component);
+
+	exports.default = CarbInsulin;
 
 /***/ },
 /* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(230);
+	module.exports = {
+	  Bar: __webpack_require__(230),
+	  Doughnut: __webpack_require__(234),
+	  Line: __webpack_require__(235),
+	  Pie: __webpack_require__(236),
+	  PolarArea: __webpack_require__(237),
+	  Radar: __webpack_require__(238),
+	  createClass: __webpack_require__(231).createClass
+	};
+
+
+/***/ },
+/* 230 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var vars = __webpack_require__(231);
 
 	module.exports = vars.createClass('Bar', ['getBarsAtEvent']);
 
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -26080,7 +26221,7 @@
 	    };
 
 	    classData.initializeChart = function(nextProps) {
-	      var Chart = __webpack_require__(231);
+	      var Chart = __webpack_require__(232);
 	      var el = ReactDOM.findDOMNode(this);
 	      var ctx = el.getContext("2d");
 	      var chart = new Chart(ctx)[chartType](nextProps.data, nextProps.options || {});
@@ -26171,7 +26312,7 @@
 
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -26485,7 +26626,7 @@
 				//Method for warning of errors
 				if (window.console && typeof window.console.warn === "function") console.warn(str);
 			},
-			amd = helpers.amd = ("function" === 'function' && __webpack_require__(232)),
+			amd = helpers.amd = ("function" === 'function' && __webpack_require__(233)),
 			//-- Math methods
 			isNumber = helpers.isNumber = function(n){
 				return !isNaN(parseFloat(n)) && isFinite(n);
@@ -29913,7 +30054,7 @@
 
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -29921,52 +30062,52 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 233 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var vars = __webpack_require__(230);
-
-	module.exports = vars.createClass('Doughnut', ['getSegmentsAtEvent']);
-
-
-/***/ },
 /* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(230);
+	var vars = __webpack_require__(231);
 
-	module.exports = vars.createClass('Line', ['getPointsAtEvent']);
+	module.exports = vars.createClass('Doughnut', ['getSegmentsAtEvent']);
 
 
 /***/ },
 /* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(230);
+	var vars = __webpack_require__(231);
 
-	module.exports = vars.createClass('Pie', ['getSegmentsAtEvent']);
+	module.exports = vars.createClass('Line', ['getPointsAtEvent']);
 
 
 /***/ },
 /* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(230);
+	var vars = __webpack_require__(231);
 
-	module.exports = vars.createClass('PolarArea', ['getSegmentsAtEvent']);
+	module.exports = vars.createClass('Pie', ['getSegmentsAtEvent']);
 
 
 /***/ },
 /* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var vars = __webpack_require__(230);
+	var vars = __webpack_require__(231);
+
+	module.exports = vars.createClass('PolarArea', ['getSegmentsAtEvent']);
+
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var vars = __webpack_require__(231);
 
 	module.exports = vars.createClass('Radar', ['getPointsAtEvent']);
 
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29981,7 +30122,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Demographics = __webpack_require__(239);
+	var _Demographics = __webpack_require__(240);
 
 	var _Demographics2 = _interopRequireDefault(_Demographics);
 
@@ -30041,7 +30182,7 @@
 	;
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -30056,7 +30197,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Searches = __webpack_require__(240);
+	var _Searches = __webpack_require__(241);
 
 	var _Searches2 = _interopRequireDefault(_Searches);
 
@@ -30069,7 +30210,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // modules/Demographics.js
 
 
-	var BarChart = __webpack_require__(228).Bar;
+	var BarChart = __webpack_require__(229).Bar;
 
 	var Demographics = function (_React$Component) {
 	  _inherits(Demographics, _React$Component);
@@ -30234,7 +30375,7 @@
 	exports.default = Demographics;
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

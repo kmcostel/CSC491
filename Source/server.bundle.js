@@ -61,18 +61,18 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Use these to match the url to routes and then render
-	var bodyParser = __webpack_require__(14);
-	var compression = __webpack_require__(15);
-	var express = __webpack_require__(16);
-	var favicon = __webpack_require__(17);
-	var fillResponse = __webpack_require__(18);
-	var https = __webpack_require__(19);
-	var keys = __webpack_require__(20);
-	var makeOptions = __webpack_require__(21);
-	var ml = __webpack_require__(22); // MarkLogic module
-	var path = __webpack_require__(25);
-	var pem = __webpack_require__(26);
-	var request = __webpack_require__(27);
+	var bodyParser = __webpack_require__(15);
+	var compression = __webpack_require__(16);
+	var express = __webpack_require__(17);
+	var favicon = __webpack_require__(18);
+	var fillResponse = __webpack_require__(19);
+	var https = __webpack_require__(20);
+	var keys = __webpack_require__(21);
+	var makeOptions = __webpack_require__(22);
+	var ml = __webpack_require__(23); // MarkLogic module
+	var path = __webpack_require__(26);
+	var pem = __webpack_require__(27);
+	var request = __webpack_require__(28);
 
 	var app = express();
 
@@ -190,7 +190,7 @@
 
 	var _Home2 = _interopRequireDefault(_Home);
 
-	var _Account = __webpack_require__(11);
+	var _Account = __webpack_require__(12);
 
 	var _Account2 = _interopRequireDefault(_Account);
 
@@ -618,7 +618,7 @@
 	                  ' Search '
 	               )
 	            ),
-	            _react2.default.createElement(_Results2.default, { items: this.state.items })
+	            _react2.default.createElement(_Results2.default, { items: this.state.items, user: this.state.user })
 	         );
 	      }
 	   }]);
@@ -644,6 +644,10 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _CarbInsulin = __webpack_require__(10);
+
+	var _CarbInsulin2 = _interopRequireDefault(_CarbInsulin);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -653,7 +657,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Results.js
 
 
-	var BarChart = __webpack_require__(10).Bar;
+	var BarChart = __webpack_require__(11).Bar;
 	//var Chart = require('chart.js');
 
 	var Results = function (_React$Component) {
@@ -662,10 +666,38 @@
 	  function Results(props) {
 	    _classCallCheck(this, Results);
 
-	    return _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
+
+	    _this.componentWillMount = _this.componentWillMount.bind(_this);
+	    _this.componentWillReceiveProps = _this.componentWillReceiveProps.bind(_this);
+	    _this.state = { user: props.user, insulin: 3 };
+	    return _this;
 	  }
 
 	  _createClass(Results, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      // set state with insulin amount user specified
+	      var self = this;
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      var self = this;
+	      this.setState({ user: nextProps.user });
+
+	      $.ajax({
+	        url: 'http://localhost:8080/userInfo',
+	        type: 'POST',
+	        data: JSON.stringify({ user: nextProps.user }),
+	        contentType: 'application/json; charset=utf-8',
+	        dataType: 'json',
+	        success: function success(response) {
+	          self.setState({ insulin: response.userInfo.demographics.insulin });
+	        }
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 
@@ -688,14 +720,18 @@
 	        );
 	      });
 
+	      // None of this affects the chart... http://www.chartjs.org/docs/latest/configuration/tooltip.html 
 	      var chartOptions = {
 	        tooltips: {
 	          enabled: false
 	        },
-	        stacked: true
+	        animation: {
+	          easing: 'easeOutElastic'
+	        }
 	      };
 
 	      var barChart = null;
+	      var carbInsulinAnimation = null;
 	      var fats = 0;
 	      var protein = 0;
 	      var sugar = 0;
@@ -722,6 +758,7 @@
 	      };
 
 	      for (var i = 0; i < foodList.length; i++) {
+	        carbs += foodList[i].carbs;
 	        chartData.datasets.push({
 	          label: foodList[i].name,
 	          fillColor: '#' + ("000000" + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6),
@@ -733,6 +770,9 @@
 	          data: [foodList[i].carbs, foodList[i].fat, foodList[i].protein, foodList[i].sugar]
 	        });
 	      };
+	      if (carbs == 0) {
+	        carbs = -1;
+	      }
 
 	      if (this.props.items.length > 0) {
 	        barChart = _react2.default.createElement(BarChart, { data: chartData, options: chartOptions, redraw: true, width: '650', height: '325' });
@@ -742,7 +782,15 @@
 	        'div',
 	        null,
 	        foods,
-	        barChart
+	        barChart,
+	        _react2.default.createElement('br', null),
+	        ' ',
+	        _react2.default.createElement('br', null),
+	        ' ',
+	        _react2.default.createElement('br', null),
+	        ' ',
+	        _react2.default.createElement('br', null),
+	        _react2.default.createElement(_CarbInsulin2.default, { insulin: this.state.insulin, carbs: carbs })
 	      );
 	    }
 	  }]);
@@ -754,12 +802,105 @@
 
 /***/ },
 /* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // CarbInsulin.js
+
+
+	var CarbInsulin = function (_React$Component) {
+	  _inherits(CarbInsulin, _React$Component);
+
+	  function CarbInsulin(props) {
+	    _classCallCheck(this, CarbInsulin);
+
+	    var _this = _possibleConstructorReturn(this, (CarbInsulin.__proto__ || Object.getPrototypeOf(CarbInsulin)).call(this, props));
+
+	    _this.componentWillReceiveProps = _this.componentWillReceiveProps.bind(_this);
+	    _this.state = { insulin: props.insulin, carbs: -1 };
+	    return _this;
+	  }
+
+	  _createClass(CarbInsulin, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.insulin != undefined) {
+	        this.setState({ insulin: nextProps.insulin });
+	      }
+	      if (nextProps.carbs != undefined) {
+	        this.setState({ carbs: Math.round(nextProps.carbs * 10) / 10 });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+
+	      if (this.state.insulin != undefined && this.state.carbs > -1) {
+	        return _react2.default.createElement(
+	          'div',
+	          { id: 'insulinAnimation' },
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'carbs' },
+	            ' ',
+	            this.state.carbs,
+	            ' carbs '
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'arrowContainer' },
+	            ' ',
+	            _react2.default.createElement('img', { src: '/images/arrow.png', width: '150', alt: 'arrow' }),
+	            '  '
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'insulin' },
+	            ' ',
+	            this.state.insulin,
+	            ' IU '
+	          )
+	        );
+	      } else {
+	        return _react2.default.createElement(
+	          'div',
+	          null,
+	          ' '
+	        );
+	      }
+	    }
+	  }]);
+
+	  return CarbInsulin;
+	}(_react2.default.Component);
+
+	exports.default = CarbInsulin;
+
+/***/ },
+/* 11 */
 /***/ function(module, exports) {
 
 	module.exports = require("react-chartjs");
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -774,7 +915,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Demographics = __webpack_require__(12);
+	var _Demographics = __webpack_require__(13);
 
 	var _Demographics2 = _interopRequireDefault(_Demographics);
 
@@ -834,7 +975,7 @@
 	;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -849,7 +990,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Searches = __webpack_require__(13);
+	var _Searches = __webpack_require__(14);
 
 	var _Searches2 = _interopRequireDefault(_Searches);
 
@@ -862,7 +1003,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // modules/Demographics.js
 
 
-	var BarChart = __webpack_require__(10).Bar;
+	var BarChart = __webpack_require__(11).Bar;
 
 	var Demographics = function (_React$Component) {
 	  _inherits(Demographics, _React$Component);
@@ -1027,7 +1168,7 @@
 	exports.default = Demographics;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1113,31 +1254,31 @@
 	exports.default = Searches;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 	module.exports = require("body-parser");
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	module.exports = require("compression");
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	module.exports = require("express");
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	module.exports = require("serve-favicon");
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1176,13 +1317,13 @@
 	};
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	module.exports = require("https");
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1195,7 +1336,7 @@
 	};
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1228,7 +1369,7 @@
 	};
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1236,8 +1377,8 @@
 	// public/js/ml.js
 	module.exports = {
 	   update: function update(userId, searchStr) {
-	      var marklogic = __webpack_require__(23);
-	      var my = __webpack_require__(24);
+	      var marklogic = __webpack_require__(24);
+	      var my = __webpack_require__(25);
 	      var db = marklogic.createDatabaseClient(my.connInfo);
 	      var qb = marklogic.queryBuilder;
 	      var pb = marklogic.patchBuilder;
@@ -1271,8 +1412,8 @@
 	   },
 	   // Creates a user with userId in database if they don't exist
 	   checkUser: function checkUser(userId) {
-	      var marklogic = __webpack_require__(23);
-	      var my = __webpack_require__(24);
+	      var marklogic = __webpack_require__(24);
+	      var my = __webpack_require__(25);
 	      var db = marklogic.createDatabaseClient(my.connInfo);
 	      var qb = marklogic.queryBuilder;
 	      var pb = marklogic.patchBuilder;
@@ -1291,8 +1432,8 @@
 	   },
 
 	   getUserInfo: function getUserInfo(userId, res) {
-	      var marklogic = __webpack_require__(23);
-	      var my = __webpack_require__(24);
+	      var marklogic = __webpack_require__(24);
+	      var my = __webpack_require__(25);
 	      var db = marklogic.createDatabaseClient(my.connInfo);
 	      var results;
 
@@ -1307,8 +1448,8 @@
 	      });
 	   },
 	   saveDems: function saveDems(data) {
-	      var marklogic = __webpack_require__(23);
-	      var my = __webpack_require__(24);
+	      var marklogic = __webpack_require__(24);
+	      var my = __webpack_require__(25);
 	      var db = marklogic.createDatabaseClient(my.connInfo);
 	      var qb = marklogic.queryBuilder;
 	      var pb = marklogic.patchBuilder;
@@ -1321,13 +1462,13 @@
 	};
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	module.exports = require("marklogic");
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1342,19 +1483,19 @@
 	};
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports) {
 
 	module.exports = require("path");
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports) {
 
 	module.exports = require("pem");
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	module.exports = require("request");

@@ -57,7 +57,7 @@ export default class SearchBar extends React.Component {
                <textarea id='searchText' placeholder={this.props.placeholder} cols='80' rows='1'/> {' '}
                <button id='searchBtn' className='greenOut' onClick={() => this.getFoodInfo(this.updateState)}> Search </button>
             </div>
-            <Results items={this.state.items} />
+            <Results items={this.state.items} user={this.state.user} />
          </div>
       );
    }
