@@ -112,7 +112,7 @@ export default class Results extends React.Component {
       <div>
         {foods} 
         {barChart}
-        <br/> <br/> <br/> <br/>
+        <br/> <br/>
 				<CarbInsulin insulin={this.state.insulin} carbs={carbs}/>
       </div>
     );

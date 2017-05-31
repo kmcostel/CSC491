@@ -26026,10 +26026,6 @@
 	        _react2.default.createElement('br', null),
 	        ' ',
 	        _react2.default.createElement('br', null),
-	        ' ',
-	        _react2.default.createElement('br', null),
-	        ' ',
-	        _react2.default.createElement('br', null),
 	        _react2.default.createElement(_CarbInsulin2.default, { insulin: this.state.insulin, carbs: carbs })
 	      );
 	    }
@@ -26114,7 +26110,7 @@
 	            'div',
 	            { id: 'insulin' },
 	            ' ',
-	            this.state.insulin,
+	            Math.round(this.state.insulin * this.state.carbs * 100) / 100,
 	            ' IU '
 	          )
 	        );

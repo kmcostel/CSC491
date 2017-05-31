@@ -12,8 +12,8 @@ module.exports = {
             // Use documents.write() if a user doesn't exist in the database.
             // Otherwise use the documents.patch() function to update their search history
             if (documents.length == 0) writeUser(searchStr);
-            else if (!documents[0].content.searches.includes(searchStr)) { // check user's search attribute already has searchStr ... SOMEHOW
-              updateUser();
+            else { // check if term already exists in search history (previously searched)
+              updateUser(documents[0].content.searches.includes(searchStr));
             }
          }, function(error) {
             console.log(JSON.stringify(error, null, 2));
@@ -34,10 +34,17 @@ module.exports = {
 
       // Insert the search string into the user's search history using patch operation
       // Patch operation can update a document in the database
-      var updateUser = function() {
-         db.documents.patch('/user/' + userId + '.json',
-            pb.insert('/array-node("searches")' , 'last-child', searchStr)
-         );
+      var updateUser = function(alreadySearched) {
+         if (!alreadySearched) {
+           db.documents.patch('/user/' + userId + '.json',
+              pb.insert('/array-node("searches")' , 'last-child', searchStr)
+           );
+         } 
+         else {
+           //TODO, aleady searched for term, need to move it to end of list though 
+           // (Order of searches is reversed on webpage)
+           // Delete it and re add it?
+         } 
       }
 
    },
@@ -93,9 +100,6 @@ module.exports = {
       var db = marklogic.createDatabaseClient(my.connInfo);
       var qb = marklogic.queryBuilder;
       var pb = marklogic.patchBuilder;
-      console.log('saving :');
-      console.log(data);
-      // Need to check that data was entered
       db.documents.patch('/user/' + data.user + '.json',
          pb.replace('/demographics/height', data.height),
          pb.replace('/demographics/age', data.age),

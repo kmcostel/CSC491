@@ -24,7 +24,7 @@ export default class CarbInsulin extends React.Component {
         <div id='insulinAnimation'>
           <div id='carbs'> {this.state.carbs} carbs </div>  
           <div id='arrowContainer'> <img src='/images/arrow.png' width='150' alt='arrow'/>  </div>
-          <div id='insulin'> {this.state.insulin} IU </div>
+          <div id='insulin'> {Math.round(this.state.insulin * this.state.carbs * 100) / 100} IU </div>
         </div>
       )
     }
